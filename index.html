@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0805;
+    --surface: #110e09;
+    --gold: #c9a84c;
+    --gold-dim: #7a6230;
+    --cream: #f0e6cc;
+    --muted: #5a5040;
+    --border: #2a2218;
+    --reveal-bg: #0f2a1e;
+    --reveal-text: #7ecfa0;
+    --reveal-border: #1e5a3a;
+    --sidebar-w: 280px;
+  }
+
+  html, body {
+    height: 100%;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--cream);
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* ── UPLOAD SCREEN ── */
+  #upload-screen {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 28px;
+    text-align: center;
+    padding: 24px;
+  }
+
+  .crown-icon { font-size: 40px; animation: float 3s ease-in-out infinite; }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
+
+  h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    color: var(--gold);
+    letter-spacing: 0.05em;
+  }
+  .subtitle { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; }
+
+  .drop-zone {
+    width: min(440px, 100%);
+    border: 1px solid var(--gold-dim);
+    padding: 40px 28px;
+    cursor: pointer;
+    background: var(--surface);
+    position: relative;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--gold); background: #181208; }
+  .drop-zone::before,.drop-zone::after,.drop-zone .c1,.drop-zone .c2 {
+    content:''; position:absolute; width:11px; height:11px; border-color:var(--gold); border-style:solid;
+  }
+  .drop-zone::before { top:-1px;left:-1px; border-width:2px 0 0 2px; }
+  .drop-zone::after  { top:-1px;right:-1px; border-width:2px 2px 0 0; }
+  .drop-zone .c1     { bottom:-1px;right:-1px; border-width:0 2px 2px 0; }
+  .drop-zone .c2     { bottom:-1px;left:-1px; border-width:0 0 2px 2px; }
+
+  .drop-icon { font-size:28px; margin-bottom:12px; opacity:0.5; }
+  .drop-text { font-size:0.82rem; color:var(--muted); line-height:1.7; }
+  .drop-text strong { color:var(--gold); cursor:pointer; }
+  .drop-text strong:hover { text-decoration:underline; }
+  #file-input { display:none; }
+  .format-hint { font-size:0.65rem; color:var(--muted); opacity:0.5; letter-spacing:0.1em; }
+  .error-msg { color:#c0504d; font-size:0.72rem; margin-top:10px; min-height:1em; }
+
+  /* ── QUIZ LAYOUT ── */
+  #quiz-screen {
+    display: none;
+    height: 100vh;
+    flex-direction: row;
+  }
+
+  /* MAIN PANEL */
+  .main-panel {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 28px;
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 16px;
+    flex-shrink: 0;
+  }
+
+  .quiz-counter { font-size:0.68rem; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; white-space:nowrap; }
+  .quiz-counter span { color:var(--gold); }
+  .progress-bar { flex:1; height:2px; background:var(--border); }
+  .progress-fill { height:100%; background:var(--gold); transition:width 0.4s ease; }
+  .new-quiz-btn {
+    background:none; border:none; color:var(--muted);
+    font-family:'Courier Prime',monospace; font-size:0.68rem;
+    letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; white-space:nowrap;
+  }
+  .new-quiz-btn:hover { color:var(--gold); }
+
+  /* Question body */
+  .question-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .question-card {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 24px 28px;
+    display: flex;
+    flex-direction: row;
+    gap: 24px;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .q-text-col {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    min-width: 0;
+  }
+  .q-text-col::-webkit-scrollbar { width: 3px; }
+  .q-text-col::-webkit-scrollbar-thumb { background: var(--border); }
+
+  .q-number { font-size:0.62rem; color:var(--gold-dim); letter-spacing:0.2em; text-transform:uppercase; flex-shrink:0; }
+
+  .q-text {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(1rem, 1.8vw, 1.3rem);
+    line-height:1.75;
+    color:var(--cream);
+  }
+
+  .q-image-col {
+    flex-shrink: 0;
+    width: 260px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .q-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    filter: sepia(0.1);
+    border: 1px solid var(--border);
+  }
+
+  /* Answer row */
+  .answer-row {
+    flex-shrink: 0;
+    border: 1px solid var(--reveal-border);
+    background: var(--reveal-bg);
+    padding: 14px 24px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    min-height: 56px;
+    transition: opacity 0.25s;
+  }
+  .answer-row.hidden { opacity: 0; pointer-events: none; }
+
+  .a-label { font-size:0.6rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; flex-shrink:0; }
+  .a-text {
+    font-family:'Cormorant Garamond',serif;
+    font-size:clamp(1.1rem, 2vw, 1.5rem);
+    font-weight:600;
+    color:var(--reveal-text);
+    flex:1;
+  }
+  .a-image { max-height:48px; max-width:110px; object-fit:contain; flex-shrink:0; }
+
+  /* Controls row */
+  .controls-row {
+    flex-shrink: 0;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .btn {
+    font-family:'Courier Prime',monospace;
+    font-size:0.72rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    padding:10px 22px;
+    border:1px solid;
+    cursor:pointer;
+    background:none;
+    transition:all 0.15s;
+    white-space:nowrap;
+  }
+  .btn-reveal { border-color:var(--gold); color:var(--gold); }
+  .btn-reveal:hover { background:var(--gold); color:var(--bg); }
+  .btn-next { border-color:var(--muted); color:var(--cream); margin-left:auto; }
+  .btn-next:hover { background:var(--gold); border-color:var(--gold); color:var(--bg); }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    width: var(--sidebar-w);
+    flex-shrink: 0;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 14px;
+    gap: 10px;
+  }
+
+  .sidebar-title {
+    font-size: 0.85rem;
+    color: var(--gold);
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .team-card {
+    border: 1px solid var(--border);
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 1;
+    justify-content: space-between;
+    transition: border-color 0.2s;
+  }
+  .team-card:focus-within { border-color: var(--gold-dim); }
+
+  .team-name-input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem;
+    letter-spacing: 0.04em;
+    width: 100%;
+    padding: 2px 0 4px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .team-name-input:focus { border-bottom-color: var(--gold); }
+  .team-name-input::placeholder { color: var(--muted); }
+
+  .team-score-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .score-display {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  .score-btns { display:flex; gap:6px; }
+
+  .score-btn {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border);
+    background: none;
+    color: var(--muted);
+    font-family: 'Courier Prime', monospace;
+    font-size: 1.1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    line-height: 1;
+    padding-bottom: 1px;
+  }
+  .score-btn:hover { border-color:var(--gold); color:var(--gold); background: #1a1408; }
+  .score-btn.minus:hover { border-color:#a03030; color:#c06060; }
+
+  .score-label {
+    font-size: 0.52rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    opacity: 0.6;
+  }
+
+  /* ── LIGHTBOX ── */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.88);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    cursor: zoom-out;
+  }
+  #lightbox.active { display: flex; }
+  #lightbox img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 1px solid var(--gold-dim);
+    box-shadow: 0 0 60px rgba(0,0,0,0.8);
+    animation: lbIn 0.2s ease;
+  }
+  @keyframes lbIn { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
+
+  .zoomable { cursor: zoom-in; }
+
+  .setup-teams { width: min(440px, 100%); }
+
+  .setup-teams-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .setup-team-input {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+  .setup-team-input:focus { border-color: var(--gold); }
+  .setup-team-input::placeholder { color: var(--muted); font-style: italic; }
+
+  /* End screen */
+  .end-screen {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; gap:16px; text-align:center;
+  }
+  .end-screen .crown-icon { font-size:52px; }
+  .end-screen h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--gold); }
+  .end-screen p { color:var(--muted); font-size:0.72rem; letter-spacing:0.1em; }
+</style>
+</head>
+<body>
+
+<!-- Upload Screen -->
+<div id="upload-screen">
+  <div class="crown-icon">♛</div>
+  <div>
+    <h1>Quiz</h1>
+    <div class="subtitle">Kings &amp; Queens Edition</div>
+  </div>
+
+  <div class="setup-teams">
+    <div class="setup-teams-grid">
+      <input class="setup-team-input" type="text" placeholder="Team 1" data-i="0">
+      <input class="setup-team-input" type="text" placeholder="Team 2" data-i="1">
+      <input class="setup-team-input" type="text" placeholder="Team 3" data-i="2">
+      <input class="setup-team-input" type="text" placeholder="Team 4" data-i="3">
+    </div>
+  </div>
+
+  <div class="drop-zone" id="drop-zone">
+    <div class="c1"></div><div class="c2"></div>
+    <div class="drop-icon">⬆</div>
+    <div class="drop-text">
+      Drop your CSV here, or <strong id="browse-btn">browse</strong>
+    </div>
+    <div class="error-msg" id="error-msg"></div>
+    <input type="file" id="file-input" accept=".csv">
+  </div>
+  <div class="format-hint">columns: questiontext · answer · questionimage · answerimage</div>
+</div>
+
+<!-- Quiz Screen -->
+<div id="quiz-screen">
+
+  <div class="main-panel">
+    <div class="quiz-header">
+      <div class="quiz-counter">Q <span id="q-current">1</span> / <span id="q-total">0</span></div>
+      <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+      <button class="new-quiz-btn" id="new-quiz-btn">↩ New CSV</button>
+    </div>
+    <div class="question-body" id="question-body"></div>
+  </div>
+
+  <div class="sidebar">
+    <div class="sidebar-title">♛ Scoreboard</div>
+    <div class="team-card" id="team-0"></div>
+    <div class="team-card" id="team-1"></div>
+    <div class="team-card" id="team-2"></div>
+    <div class="team-card" id="team-3"></div>
+  </div>
+
+</div>
+
+<!-- Lightbox -->
+<div id="lightbox"><img id="lightbox-img" src="" alt=""></div>
+
+<script>
+  // ── Lightbox ──
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+
+  document.addEventListener('click', e => {
+    if (e.target.classList.contains('zoomable')) {
+      lightboxImg.src = e.target.src;
+      lightbox.classList.add('active');
+    }
+  });
+  lightbox.addEventListener('click', () => lightbox.classList.remove('active'));
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { lightbox.classList.remove('active'); return; }
+    if (lightbox.classList.contains('active')) return;
+    if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+    if (e.key === ' ') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
+    if (e.key === 'ArrowRight') { const btn = document.getElementById('next-btn'); if (btn) btn.click(); }
+    if (e.key === 'ArrowLeft') { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
+  });
+
+  const uploadScreen = document.getElementById('upload-screen');
+  const quizScreen   = document.getElementById('quiz-screen');
+  const dropZone     = document.getElementById('drop-zone');
+  const fileInput    = document.getElementById('file-input');
+  const browseBtn    = document.getElementById('browse-btn');
+  const errorMsg     = document.getElementById('error-msg');
+  const qCurrent     = document.getElementById('q-current');
+  const qTotal       = document.getElementById('q-total');
+  const progressFill = document.getElementById('progress-fill');
+  const questionBody = document.getElementById('question-body');
+  const newQuizBtn   = document.getElementById('new-quiz-btn');
+
+  let questions = [];
+  let currentIndex = 0;
+  let answerVisible = false;
+
+  const teams = [
+    { name: 'Team 1', score: 0 },
+    { name: 'Team 2', score: 0 },
+    { name: 'Team 3', score: 0 },
+    { name: 'Team 4', score: 0 },
+  ];
+
+  function buildTeamCards() {
+    teams.forEach((team, i) => {
+      const card = document.getElementById(`team-${i}`);
+      card.innerHTML = `
+        <input class="team-name-input" type="text" value="${team.name.replace(/"/g,'&quot;')}" placeholder="Team ${i+1}" data-i="${i}">
+        <div class="team-score-row">
+          <div class="score-btns">
+            <button class="score-btn minus" data-i="${i}" data-d="-5" title="−5">−</button>
+            <button class="score-btn plus"  data-i="${i}" data-d="5"  title="+5">+</button>
+          </div>
+          <div class="score-display" id="score-${i}">${team.score}</div>
+        </div>
+        <div class="score-label">± 5 per click</div>
+      `;
+    });
+
+    document.querySelectorAll('.team-name-input').forEach(inp => {
+      inp.addEventListener('input', e => { teams[+e.target.dataset.i].name = e.target.value; });
+    });
+
+    document.querySelectorAll('.score-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const i = +btn.dataset.i;
+        const d = +btn.dataset.d;
+        teams[i].score = Math.max(0, teams[i].score + d);
+        document.getElementById(`score-${i}`).textContent = teams[i].score;
+      });
+    });
+  }
+
+  browseBtn.addEventListener('click', () => fileInput.click());
+  fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+  newQuizBtn.addEventListener('click', () => {
+    quizScreen.style.display = 'none';
+    uploadScreen.style.display = 'flex';
+    fileInput.value = '';
+    errorMsg.textContent = '';
+  });
+
+  function handleFile(file) {
+    if (!file) return;
+    if (!file.name.endsWith('.csv')) { errorMsg.textContent = 'Please upload a .csv file.'; return; }
+    const reader = new FileReader();
+    reader.onload = e => parseCSV(e.target.result);
+    reader.readAsText(file);
+  }
+
+  function parseCSV(text) {
+    // Normalize line endings
+    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+    const rows = splitCSVRows(text);
+    if (rows.length < 2) { errorMsg.textContent = 'CSV appears empty.'; return; }
+    const first = rows[0][0] ? rows[0][0].toLowerCase() : '';
+    const hasHeader = first.includes('questiontext') || first.includes('answer');
+    const dataRows = hasHeader ? rows.slice(1) : rows;
+    const parsed = dataRows.map(cols => ({
+      questiontext:  (cols[0]||'').trim(),
+      answer:        (cols[1]||'').trim(),
+      questionimage: (cols[2]||'').trim(),
+      answerimage:   (cols[3]||'').trim(),
+    })).filter(q => q.questiontext);
+    if (!parsed.length) { errorMsg.textContent = 'No valid questions found.'; return; }
+    questions = parsed;
+    currentIndex = 0;
+    startQuiz();
+  }
+
+  // Proper RFC 4180 CSV parser — handles quoted fields, embedded commas, newlines, and "" escaped quotes
+  function splitCSVRows(text) {
+    const rows = [];
+    let row = [];
+    let current = '';
+    let inQuotes = false;
+    let i = 0;
+    while (i < text.length) {
+      const ch = text[i];
+      if (inQuotes) {
+        if (ch === '"') {
+          if (text[i+1] === '"') { current += '"'; i += 2; continue; } // escaped quote
+          else { inQuotes = false; i++; continue; }
+        }
+        current += ch; i++;
+      } else {
+        if (ch === '"') { inQuotes = true; i++; continue; }
+        if (ch === ',') { row.push(current); current = ''; i++; continue; }
+        if (ch === '\n') { row.push(current); rows.push(row); row = []; current = ''; i++; continue; }
+        current += ch; i++;
+      }
+    }
+    row.push(current);
+    if (row.some(c => c.trim())) rows.push(row);
+    return rows;
+  }
+
+  function startQuiz() {
+    // Read any names entered on the upload screen
+    document.querySelectorAll('.setup-team-input').forEach(inp => {
+      const i = +inp.dataset.i;
+      if (inp.value.trim()) teams[i].name = inp.value.trim();
+    });
+    uploadScreen.style.display = 'none';
+    quizScreen.style.display = 'flex';
+    buildTeamCards();
+    qTotal.textContent = questions.length;
+    // Show ready screen instead of jumping straight to Q1
+    showReady();
+  }
+
+  function showReady() {
+    answerVisible = false;
+    progressFill.style.width = '0%';
+    qCurrent.textContent = '—';
+    questionBody.innerHTML = `
+      <div class="end-screen">
+        <div class="crown-icon">♛</div>
+        <h2>Ready?</h2>
+        <p>${questions.length} questions loaded</p>
+        <button class="btn btn-reveal" id="start-btn">Start Quiz</button>
+      </div>
+    `;
+    document.getElementById('start-btn').addEventListener('click', () => {
+      currentIndex = 0;
+      renderQuestion();
+    });
+  }
+
+  function renderQuestion() {
+    answerVisible = false;
+    const q = questions[currentIndex];
+    const isLast = currentIndex === questions.length - 1;
+    qCurrent.textContent = currentIndex + 1;
+    progressFill.style.width = ((currentIndex + 1) / questions.length * 100) + '%';
+
+    questionBody.innerHTML = `
+      <div class="question-card">
+        <div class="q-text-col">
+          <div class="q-number">Question ${currentIndex + 1}</div>
+          <div class="q-text">${renderText(q.questiontext)}</div>
+        </div>
+        ${q.questionimage ? `<div class="q-image-col"><img class="q-image zoomable" src="${q.questionimage}" alt="" onerror="this.parentElement.style.display='none'"></div>` : ''}
+      </div>
+
+      <div class="answer-row hidden" id="answer-row">
+        <div class="a-label">Answer</div>
+        <div class="a-text">${renderText(q.answer)}</div>
+        ${q.answerimage ? `<img class="a-image zoomable" src="${q.answerimage}" alt="" onerror="this.style.display='none'">` : ''}
+      </div>
+
+      <div class="controls-row">
+        <button class="btn btn-reveal" id="reveal-btn">Reveal Answer</button>
+        <button class="btn btn-next" id="next-btn">${isLast ? 'Finish ♛' : 'Next →'}</button>
+      </div>
+    `;
+
+    document.getElementById('reveal-btn').addEventListener('click', toggleAnswer);
+    document.getElementById('next-btn').addEventListener('click', nextQuestion);
+  }
+
+  function toggleAnswer() {
+    answerVisible = !answerVisible;
+    document.getElementById('answer-row').classList.toggle('hidden', !answerVisible);
+    document.getElementById('reveal-btn').textContent = answerVisible ? 'Hide Answer' : 'Reveal Answer';
+  }
+
+  function nextQuestion() {
+    if (currentIndex < questions.length - 1) {
+      currentIndex++;
+      renderQuestion();
+    } else {
+      showEnd();
+    }
+  }
+
+  function showEnd() {
+    questionBody.innerHTML = `
+      <div class="end-screen">
+        <div class="crown-icon">♛</div>
+        <h2>Quiz Complete</h2>
+        <p>${questions.length} questions · scores above</p>
+        <button class="btn btn-reveal" id="restart-btn">Start Again</button>
+      </div>
+    `;
+    document.getElementById('restart-btn').addEventListener('click', () => { showReady(); });
+  }
+
+  // Safely render text: escape HTML first, then allow <br>, **bold**, *italic*
+  function renderText(str) {
+    if (!str) return '';
+    // Escape all HTML special chars including quotes
+    let s = str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+    // Now re-allow <br> tags (literal \n → <br>, and the escaped &lt;br&gt; → <br>)
+    s = s.replace(/\n/g, '<br>');
+    s = s.replace(/&lt;br&gt;/gi, '<br>');
+    // Markdown: **bold**
+    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+    // Markdown: *italic*
+    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
+    return s;
+  }
+</script>
+</body>
+</html>
