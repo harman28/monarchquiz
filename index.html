@@ -240,6 +240,13 @@
     border: 1px solid var(--border);
   }
 
+  @media (max-width: 600px) {
+    .main-panel { padding-bottom: 20px; }
+    .question-card { flex-direction: column; overflow-y: auto; }
+    .q-image-col { width: 100%; height: 180px; flex-shrink: 0; }
+    .q-text-col { overflow-y: visible; }
+  }
+
   /* Answer row */
   .answer-row {
     flex-shrink: 0;
@@ -286,6 +293,8 @@
   }
   .btn-reveal { border-color:var(--gold); color:var(--gold); }
   .btn-reveal:hover { background:var(--gold); color:var(--bg); }
+  .btn-prev { border-color:var(--border); color:var(--muted); }
+  .btn-prev:hover:not([disabled]) { border-color:var(--muted); color:var(--cream); }
   .btn-next { border-color:var(--muted); color:var(--cream); margin-left:auto; }
   .btn-next:hover { background:var(--gold); border-color:var(--gold); color:var(--bg); }
 
@@ -309,6 +318,56 @@
     padding-bottom: 12px;
     border-bottom: 1px solid var(--border);
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .sidebar-toggle {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--muted);
+    font-size: 0.75rem;
+    cursor: pointer;
+    padding: 2px 4px;
+    font-family: 'Courier Prime', monospace;
+  }
+  .sidebar-toggle:hover { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    #quiz-screen { flex-direction: column; }
+
+    .sidebar {
+      width: 100%;
+      border-left: none;
+      border-top: 1px solid var(--border);
+      flex-shrink: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease;
+      max-height: 48px;
+      padding: 0 14px;
+    }
+
+    .sidebar.open {
+      max-height: 500px;
+      padding: 0 14px 14px;
+    }
+
+    .sidebar-title {
+      height: 48px;
+      padding-bottom: 0;
+      border-bottom: none;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .sidebar.open .sidebar-title {
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 10px;
+    }
+
+    .sidebar-toggle { display: block; }
   }
 
   .team-card {
@@ -496,8 +555,11 @@
     <div class="question-body" id="question-body"></div>
   </div>
 
-  <div class="sidebar">
-    <div class="sidebar-title">♛ Scoreboard</div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-title" id="sidebar-title">
+      <span>♛ Scoreboard</span>
+      <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle scoreboard">▼</button>
+    </div>
     <div class="team-card" id="team-0"></div>
     <div class="team-card" id="team-1"></div>
     <div class="team-card" id="team-2"></div>
@@ -587,9 +649,18 @@
     });
   }
 
+  // ── Mobile sidebar toggle ──
+  const sidebar = document.getElementById('sidebar');
+  const sidebarTitle = document.getElementById('sidebar-title');
+  const sidebarToggle = document.getElementById('sidebar-toggle');
+
+  sidebarTitle.addEventListener('click', () => {
+    const open = sidebar.classList.toggle('open');
+    sidebarToggle.textContent = open ? '▲' : '▼';
+  });
+
   // Preset quiz
   presetBtn.addEventListener('click', () => parseCSV(BUILTIN_CSV));
-
   browseBtn.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
   dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
@@ -711,11 +782,13 @@
       </div>
 
       <div class="controls-row">
+        <button class="btn btn-prev" id="prev-btn" ${currentIndex === 0 ? 'disabled style="opacity:0.3;cursor:default"' : ''}>← Prev</button>
         <button class="btn btn-reveal" id="reveal-btn">Reveal Answer</button>
         <button class="btn btn-next" id="next-btn">${isLast ? 'Finish ♛' : 'Next →'}</button>
       </div>
     `;
 
+    document.getElementById('prev-btn').addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); } });
     document.getElementById('reveal-btn').addEventListener('click', toggleAnswer);
     document.getElementById('next-btn').addEventListener('click', nextQuestion);
   }
