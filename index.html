@@ -53,28 +53,92 @@
   }
   .subtitle { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; }
 
+  /* ── PRESET QUIZ BUTTON ── */
+  .preset-section {
+    width: min(440px, 100%);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .preset-label {
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    text-align: left;
+  }
+
+  .preset-btn {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--gold-dim);
+    color: var(--cream);
+    font-family: 'Courier Prime', monospace;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
+    padding: 16px 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .preset-btn:hover { border-color: var(--gold); background: #181208; }
+  .preset-btn::before, .preset-btn::after,
+  .preset-btn .pc1, .preset-btn .pc2 {
+    content:''; position:absolute; width:9px; height:9px; border-color:var(--gold); border-style:solid;
+  }
+  .preset-btn::before { top:-1px;left:-1px; border-width:2px 0 0 2px; }
+  .preset-btn::after  { top:-1px;right:-1px; border-width:2px 2px 0 0; }
+  .preset-btn .pc1    { bottom:-1px;right:-1px; border-width:0 2px 2px 0; }
+  .preset-btn .pc2    { bottom:-1px;left:-1px; border-width:0 0 2px 2px; }
+
+  .preset-btn-icon { font-size: 1.3rem; flex-shrink: 0; }
+  .preset-btn-text { text-align: left; }
+  .preset-btn-title { color: var(--gold); font-size: 0.88rem; display: block; margin-bottom: 2px; }
+  .preset-btn-meta { color: var(--muted); font-size: 0.65rem; letter-spacing: 0.1em; }
+
+  .divider {
+    width: min(440px, 100%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: var(--muted);
+    font-size: 0.62rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
   .drop-zone {
     width: min(440px, 100%);
-    border: 1px solid var(--gold-dim);
-    padding: 40px 28px;
+    border: 1px solid var(--border);
+    padding: 28px 28px;
     cursor: pointer;
     background: var(--surface);
     position: relative;
     transition: border-color 0.2s, background 0.2s;
   }
-  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--gold); background: #181208; }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--gold-dim); background: #181208; }
   .drop-zone::before,.drop-zone::after,.drop-zone .c1,.drop-zone .c2 {
-    content:''; position:absolute; width:11px; height:11px; border-color:var(--gold); border-style:solid;
+    content:''; position:absolute; width:11px; height:11px; border-color:var(--border); border-style:solid;
   }
   .drop-zone::before { top:-1px;left:-1px; border-width:2px 0 0 2px; }
   .drop-zone::after  { top:-1px;right:-1px; border-width:2px 2px 0 0; }
   .drop-zone .c1     { bottom:-1px;right:-1px; border-width:0 2px 2px 0; }
   .drop-zone .c2     { bottom:-1px;left:-1px; border-width:0 0 2px 2px; }
 
-  .drop-icon { font-size:28px; margin-bottom:12px; opacity:0.5; }
-  .drop-text { font-size:0.82rem; color:var(--muted); line-height:1.7; }
-  .drop-text strong { color:var(--gold); cursor:pointer; }
-  .drop-text strong:hover { text-decoration:underline; }
+  .drop-icon { font-size:24px; margin-bottom:10px; opacity:0.4; }
+  .drop-text { font-size:0.78rem; color:var(--muted); line-height:1.7; }
+  .drop-text strong { color:var(--gold-dim); cursor:pointer; }
+  .drop-text strong:hover { color: var(--gold); text-decoration:underline; }
   #file-input { display:none; }
   .format-hint { font-size:0.65rem; color:var(--muted); opacity:0.5; letter-spacing:0.1em; }
   .error-msg { color:#c0504d; font-size:0.72rem; margin-top:10px; min-height:1em; }
@@ -394,6 +458,20 @@
     </div>
   </div>
 
+  <div class="preset-section">
+    <div class="preset-label">Select a quiz</div>
+    <button class="preset-btn" id="preset-btn">
+      <div class="pc1"></div><div class="pc2"></div>
+      <div class="preset-btn-icon">♛</div>
+      <div class="preset-btn-text">
+        <span class="preset-btn-title">Kings &amp; Queens</span>
+        <span class="preset-btn-meta">24 questions · monarchs, royalty &amp; more</span>
+      </div>
+    </button>
+  </div>
+
+  <div class="divider">or upload your own</div>
+
   <div class="drop-zone" id="drop-zone">
     <div class="c1"></div><div class="c2"></div>
     <div class="drop-icon">⬆</div>
@@ -413,7 +491,7 @@
     <div class="quiz-header">
       <div class="quiz-counter">Q <span id="q-current">1</span> / <span id="q-total">0</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-      <button class="new-quiz-btn" id="new-quiz-btn">↩ New CSV</button>
+      <button class="new-quiz-btn" id="new-quiz-btn">↩ New Quiz</button>
     </div>
     <div class="question-body" id="question-body"></div>
   </div>
@@ -432,6 +510,9 @@
 <div id="lightbox"><img id="lightbox-img" src="" alt=""></div>
 
 <script>
+  // ── Embedded quiz data ──
+  const BUILTIN_CSV = "questiontext,answer,questionimage,answerimage,difficulty,notes\n\"1890-1948: Queen's Day was first celebrated on 31st August, the birthday of Queen Wilhelmina.\n\n1949-1980: When Queen Juliana was coronated, the celebration was moved to her birthday on 30th April.\n\n1980-2014: During Queen Beatrix's rule, Queen's Day remained on 30th April and did not move to her birthday of 31st January.\n\nWhy?\",It's too cold in January!,https://amsterdamnightlifeticket.com/_i/52744.jpg,,easy,good\n\"Which luxury brand uses a golden crown as its logo and acts as one of the primary sponsors of several sporting events, including Wimbledon?\",Rolex,,https://cdn.worldvectorlogo.com/logos/rolex.svg,easy,weak\n\"Most coastal places on Earth see the highest tides every 14 days, at the new and full moons. \n\nAlso, the proximity of the Sun has an effect too, so the highest tides of the year occur when the Earth, Sun and Moon are all aligned, usually only a handful of days in a year. \n\nWhat term is used to refer to these highest tides, mostly in North America but also in other parts of the world?\",King Tides,https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/CSIRO_ScienceImage_10726_The_effects_of_a_king_tide_on_Queenslands_Gold_Coast.jpg/960px-CSIRO_ScienceImage_10726_The_effects_of_a_king_tide_on_Queenslands_Gold_Coast.jpg,,easy,weak\n\"This off-shoulder black silk evening gown designed by Christina Stambolian was worn by Diana, Princess of Wales at a 1994 fundraising dinner. It received massive coverage in the media due to being interpreted as having been worn by Diana \"\"in [BLANK]\"\", in response to a recent televised interview when Prince Charles admitted to having been unfaithful to her. \n\nWhat famous nickname did the press give this dress?\",Revenge Dress,\"https://hips.hearstapps.com/hmg-prod/images/princess-diana-arriving-at-the-serpentine-gallery-london-in-news-photo-1668030792.jpg?crop=1xw:0.67639xh;center,top&resize=980:*\",,medium,good\n\"The man who first discovered this skeleton in 1900, wrote \"\"I have never seen anything like it\"\". The then president of the American Museum of Natural History gave it its first full scientific name. The generic name was derived from the Greek words for tyrant and lizard, while the specific name was the Latin for 'king'. \n\nWhich creature?\",Tyrannosaurus rex,,https://image.smythstoys.com/zoom/246680.webp,easy,good\n\"When this item first arrived in London in 1850 and displayed to the public, it drew large crowds but was widely considered \"\"dull\"\" and unappealing, with one magazine even calling it \"\"Mountain of Darkness\"\".\n\nTo solve the problem, Prince Albert decided to hire Mozes Coster, a Dutch 'artisan' based in Amsterdam. Fun fact: His factory remains operational today on Museumplein! What exactly was he hired to do?\",Hired to recut the Koh-i-Noor,https://upload.wikimedia.org/wikipedia/en/1/18/Re-cutting_the_Koh-i-Noor_1852.jpg,,medium,good\n\"This iconic Hermes bag was created in the 1930s and named after a popular actress who also happened to be the then princess of Monaco. \n\nWhat is the bag called?\",Kelly bag (named after Grace Kelly),https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kelly_Bag.jpg/1280px-Kelly_Bag.jpg,,hard,weak\n\"Which role in a 2014 film that was partly short in Amsterdam, was originally offered to Kareena Kapoor and Priyanka Chopra, both of whom turned it down?\",Queen,,https://upload.wikimedia.org/wikipedia/en/4/45/QueenMoviePoster7thMarch.jpg,easy,good\n\"Scientifically, the King [BLANK] is famously not a [BLANK] at all. It is only called that because (a) it kinda-sorta looks like one, and (b) because it regularly eats other [BLANKs]. \n\nIn fact its scientific name is 'ophiophagus', which is derived from the Greek for [BLANK]-eating. \n\nFill in the blank.\",King Cobra,,https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/12_-_The_Mystical_King_Cobra_and_Coffee_Forests.jpg/500px-12_-_The_Mystical_King_Cobra_and_Coffee_Forests.jpg,medium,good\n\"This is Larry King. He's not the famous television presenter Larry King, but he is responsible for the last name of one of the greatest athletes of all time. \n\nWho is this athelete, who credits him for turning her into a feminist and who remained legally married to him for many years after she came out as lesbian?\",Billie Jean King,https://people.com/thmb/Zd6jTlJW2bFvTRoGJKU3lIlBcMs=/4000x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(749x0:751x2)/billie-jean-king-larry-king-012926-3-d71fc5d08eca44fabd040dbd5eb4099b.jpg,,easy,good\n\"Although today this automobile brand is an entirely Indian manufacturer with headquarters in Chennai, it was originally an English company founded in 1901. They were permitted to use the first part of their name because they had won contracts to supply precision parts for firearms to a government-owned rifle factory in Middlesex. \n\nThe Indian factories have been active since the 1950s and their products remain extremely popular in the streets of India even today. \n\nWhich brand?\",Royal Enfield,,https://i.pinimg.com/736x/0e/69/3f/0e693f68feea0c901f30a11fb6fb8b13.jpg,medium,good\n\"Which existing brand was relaunched by Vijay Mallya in 1978 and was initially marketed through surrogate advertisements of mineral water? \n\nThe same group also operated a low-cost airline service between 2005 and 2012.\",Kingfisher,,https://upload.wikimedia.org/wikipedia/en/0/08/Kingfisher_beer_logo.png,easy,good\n\"Manikarnika Tambe was born to a Marathi family in Varanasi and was married off at a young age to Gangadhar Rao, the ruler of an independent princely state in the 19th century. \n\nTheir only son died young, forcing Manikarnika to assume power after Gangadhar died in order to fight against British Rule. She resisted for almost 5 years until she was killed in a last stand battle at Gwalior Fort. \n\nHow do we better know Manikarnika?\",Rani of Jhansi,,https://upload.wikimedia.org/wikipedia/commons/e/eb/Rani_of_jhansi.jpg,medium,good\n\"What term, familiar to us from its use in a boardgame, originates from the Persian phrase meaning \"\"the king is dead\"\"?\",Checkmate ('shah mat'),,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc6wgGeL3GCrHhcx1dKJ6d4AVEtBvONUS0bA&s,easy,good\n\"This work of art is an 18th century musical automaton, carved and painted to show a tiger mauling a European man. When it's turned on, one hand of the man moves, and he emits a wailing sounds while the tiger grunts.\n\nWho commissioned this work as part of his anti British messaging around 1795? \n\nToday it stands in the V&A Museum in London, a defeated king's toy, displayed as a trophy by the empire that killed him.\",Tipu Sultan,https://upload.wikimedia.org/wikipedia/commons/1/1a/Tipu%27s_Tiger_with_keyboard_on_display_2006AH4168.jpg,,medium,good\n\"Name this character from Asterix and the Chariot Race, which sees Asterix and Obelix compete in a race endorsed by Roman ruler Julius Caesar. \n\nThe comic was released in 2017, and this character's name caused many to claim that Asterix had \"\"predicted\"\" something 3 years before it happened, simply because the wore a mask.\",Coronavirus,https://i.imgur.com/3U9HDY8.png,https://i.imgur.com/9iiVhJ7.png,hard,good\n\"Depending on the country you're in, these are the measurements expected from which common item?\",King size mattress,https://i.imgur.com/yo9Q88b.png,,easy,good\n\"Michael King was an American Baptist pastor who got married in 1926, had a son in 1929, and was selected by his church for a multinational trip in 1934. During this trip, Michael visited many sites in Germany that were associated with a Reformist leader from the 16th century. \n\nWhen he got back home, Michael changed his own name to honour the Reformist leader, and also changed his son's name to match his. \n\nWhat was his son's name?\",Martin Luther King Jr,,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL74j5AJ0y64lYyhRjTk2LTHcyWA33sP30yg&s,easy,good\n\"This is the Unisphere in Flushing Meadows. Flushing Meadows is a park located in which borough of New York? \n\nIt is said to have been named in 1683 after Catherine of Braganza, who was married to the King of England at the time, Charles II.\",Queens,https://upload.wikimedia.org/wikipedia/commons/4/4a/Flushing_Meadows_May_2024_64.jpg,,medium,good\n\"Most of Aristotle's observations in his book 'History of Animals' regarding this particular insect are quite sound, but he did make one pretty huge mistake in a term he used, possibly due to his own personal biases about who could rule. \n\nFor nearly 2000 years, people continued using this obviously incorrect term. Finally in 1609, the term was corrected in a book by an English biologist, whose worldview might have been affected by the monarch he was serving under. \n\nWhich insect and what incorrect term?\",He called them King bees instead of Queen bees (even though they were quite obviously female),https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf9HA8UwdPl88amq0J2Ufdnw4aGNoiLmSKWg&s,,hard,good\n\"Aditya Prateek Singh started his music career under the stage name \"\"Cool Equal\"\", but changed it when he received some advice from someone who thought he lived \"\"like a [BLANK]\"\", i.e. he would only wake up or call when he wanted to. \n\nWhat new name did he take and whom did he receive the advice from?\",\"Badshah, Honey Singh\",,https://media.assettype.com/outlookindia/2025-01-14/1rfgmstu/1.png?w=801&auto=format%2Ccompress&fit=max&format=webp&dpr=1.0,easy,good\n\"The Lion King: The Gift' is a companion album that was released alongside the 2019 Disney remake of Lion King. The album was curated and produced by which musician who also voiced a character in the movie? \n\nA Telegraph review of the album was titled \"\"All hail the lion queen\"\"\",Beyonce,https://upload.wikimedia.org/wikipedia/en/1/11/The_Lion_King_The_Gift.png,https://www.rollingstone.com/wp-content/uploads/2019/07/beyonce-lion-king-IG.jpg?w=1400&h=910&crop=1,medium,good\n\"Which Indian brand uses a member of the monarchy as both its sometimes-used logo as well as the name of its loyalty club? \n\n\"\"We call him a [BLANK] for want of a better description. But his blood isn't blue. He may look like royalty, but he isn't royal.\"\"\",Air India (The Maharaja),,https://upload.wikimedia.org/wikipedia/en/d/d6/Air_india_maharajah.jpg,easy,good\n\"The 'king' variety of this creature was first described in 1768. Nearly 76 years later, English zoologist George Robert Gray came across a related but larger, more impressive specimen. \n\nWhat kind of creature was he documenting, and what did he call it?\",Emperor Penguin,,https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg/500px-Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg,easy,good";
+
   // ── Lightbox ──
   const lightbox = document.getElementById('lightbox');
   const lightboxImg = document.getElementById('lightbox-img');
@@ -463,6 +544,7 @@
   const progressFill = document.getElementById('progress-fill');
   const questionBody = document.getElementById('question-body');
   const newQuizBtn   = document.getElementById('new-quiz-btn');
+  const presetBtn    = document.getElementById('preset-btn');
 
   let questions = [];
   let currentIndex = 0;
@@ -504,6 +586,9 @@
       });
     });
   }
+
+  // Preset quiz
+  presetBtn.addEventListener('click', () => parseCSV(BUILTIN_CSV));
 
   browseBtn.addEventListener('click', () => fileInput.click());
   fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
@@ -582,7 +667,6 @@
     quizScreen.style.display = 'flex';
     buildTeamCards();
     qTotal.textContent = questions.length;
-    // Show ready screen instead of jumping straight to Q1
     showReady();
   }
 
@@ -666,18 +750,14 @@
   // Safely render text: escape HTML first, then allow <br>, **bold**, *italic*
   function renderText(str) {
     if (!str) return '';
-    // Escape all HTML special chars including quotes
     let s = str
       .replace(/&/g, '&amp;')
       .replace(/</g, '&lt;')
       .replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;');
-    // Now re-allow <br> tags (literal \n → <br>, and the escaped &lt;br&gt; → <br>)
     s = s.replace(/\n/g, '<br>');
     s = s.replace(/&lt;br&gt;/gi, '<br>');
-    // Markdown: **bold**
     s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    // Markdown: *italic*
     s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
     return s;
   }
