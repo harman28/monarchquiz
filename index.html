@@ -8,26 +8,44 @@
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+  /* ── DARK THEME (Kings & Queens) ── */
   :root {
     --bg: #0a0805;
     --surface: #1c1610;
-    --gold: #d4b060;
-    --gold-dim: #9a7840;
-    --cream: #f5eedc;
+    --accent: #d4b060;
+    --accent-dim: #9a7840;
+    --text: #f5eedc;
     --muted: #9a8c78;
     --border: #3d3020;
     --reveal-bg: #0f2a1e;
     --reveal-text: #90e0b0;
     --reveal-border: #2a7a50;
     --sidebar-w: 280px;
+    --upload-bg: #0a0805;
+  }
+
+  /* ── LIGHT THEME (Airlines) ── */
+  [data-theme="light"] {
+    --bg: #eef4fb;
+    --surface: #ffffff;
+    --accent: #1a6fad;
+    --accent-dim: #5a9fd4;
+    --text: #1c3a52;
+    --muted: #6b8ea8;
+    --border: #c2d8ec;
+    --reveal-bg: #e8f4ff;
+    --reveal-text: #0d5c99;
+    --reveal-border: #7ab8e8;
+    --upload-bg: linear-gradient(170deg, #daeaf8 0%, #eef4fb 60%, #f5f9ff 100%);
   }
 
   html, body {
     height: 100%;
     overflow: hidden;
     background: var(--bg);
-    color: var(--cream);
+    color: var(--text);
     font-family: 'Courier Prime', monospace;
+    transition: background 0.3s, color 0.3s;
   }
 
   /* ── UPLOAD SCREEN ── */
@@ -40,40 +58,28 @@
     gap: 28px;
     text-align: center;
     padding: 24px;
+    background: var(--upload-bg);
   }
 
-  .crown-icon { font-size: 40px; animation: float 3s ease-in-out infinite; }
+  .hero-icon { font-size: 40px; animation: float 3s ease-in-out infinite; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-7px)} }
 
   h1 {
     font-family: 'Cormorant Garamond', serif;
     font-size: clamp(1.8rem, 4vw, 3rem);
-    color: var(--gold);
+    color: var(--accent);
     letter-spacing: 0.05em;
   }
   .subtitle { font-size: 0.7rem; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; }
 
-  /* ── PRESET QUIZ BUTTON ── */
-  .preset-section {
-    width: min(440px, 100%);
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .preset-label {
-    font-size: 0.6rem;
-    color: var(--muted);
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    text-align: left;
-  }
+  .preset-section { width: min(440px, 100%); display: flex; flex-direction: column; gap: 10px; }
+  .preset-label { font-size: 0.6rem; color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; text-align: left; }
 
   .preset-btn {
     width: 100%;
     background: var(--surface);
-    border: 1px solid var(--gold-dim);
-    color: var(--cream);
+    border: 1px solid var(--accent-dim);
+    color: var(--text);
     font-family: 'Courier Prime', monospace;
     font-size: 0.82rem;
     letter-spacing: 0.08em;
@@ -85,48 +91,36 @@
     transition: border-color 0.2s, background 0.2s;
     position: relative;
   }
-  .preset-btn:hover { border-color: var(--gold); background: #181208; }
-  .preset-btn::before, .preset-btn::after,
-  .preset-btn .pc1, .preset-btn .pc2 {
-    content:''; position:absolute; width:9px; height:9px; border-color:var(--gold); border-style:solid;
+  .preset-btn:hover { border-color: var(--accent); }
+  .preset-btn::before, .preset-btn::after, .preset-btn .pc1, .preset-btn .pc2 {
+    content:''; position:absolute; width:9px; height:9px; border-color:var(--accent-dim); border-style:solid;
   }
   .preset-btn::before { top:-1px;left:-1px; border-width:2px 0 0 2px; }
   .preset-btn::after  { top:-1px;right:-1px; border-width:2px 2px 0 0; }
   .preset-btn .pc1    { bottom:-1px;right:-1px; border-width:0 2px 2px 0; }
   .preset-btn .pc2    { bottom:-1px;left:-1px; border-width:0 0 2px 2px; }
-
   .preset-btn-icon { font-size: 1.3rem; flex-shrink: 0; }
   .preset-btn-text { text-align: left; }
-  .preset-btn-title { color: var(--gold); font-size: 0.88rem; display: block; margin-bottom: 2px; }
+  .preset-btn-title { color: var(--accent); font-size: 0.88rem; display: block; margin-bottom: 2px; }
   .preset-btn-meta { color: var(--muted); font-size: 0.65rem; letter-spacing: 0.1em; }
 
   .divider {
     width: min(440px, 100%);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    color: var(--muted);
-    font-size: 0.62rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
+    display: flex; align-items: center; gap: 12px;
+    color: var(--muted); font-size: 0.62rem; letter-spacing: 0.18em; text-transform: uppercase;
   }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
+  .divider::before, .divider::after { content:''; flex:1; height:1px; background:var(--border); }
 
   .drop-zone {
     width: min(440px, 100%);
     border: 1px solid var(--border);
-    padding: 28px 28px;
+    padding: 28px;
     cursor: pointer;
     background: var(--surface);
     position: relative;
     transition: border-color 0.2s, background 0.2s;
   }
-  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--gold-dim); background: #181208; }
+  .drop-zone:hover, .drop-zone.drag-over { border-color: var(--accent-dim); }
   .drop-zone::before,.drop-zone::after,.drop-zone .c1,.drop-zone .c2 {
     content:''; position:absolute; width:11px; height:11px; border-color:var(--border); border-style:solid;
   }
@@ -134,378 +128,186 @@
   .drop-zone::after  { top:-1px;right:-1px; border-width:2px 2px 0 0; }
   .drop-zone .c1     { bottom:-1px;right:-1px; border-width:0 2px 2px 0; }
   .drop-zone .c2     { bottom:-1px;left:-1px; border-width:0 0 2px 2px; }
-
   .drop-icon { font-size:24px; margin-bottom:10px; opacity:0.4; }
   .drop-text { font-size:0.78rem; color:var(--muted); line-height:1.7; }
-  .drop-text strong { color:var(--gold-dim); cursor:pointer; }
-  .drop-text strong:hover { color: var(--gold); text-decoration:underline; }
+  .drop-text strong { color:var(--accent-dim); cursor:pointer; }
+  .drop-text strong:hover { color: var(--accent); text-decoration:underline; }
   #file-input { display:none; }
   .format-hint { font-size:0.65rem; color:var(--muted); opacity:0.5; letter-spacing:0.1em; }
   .error-msg { color:#c0504d; font-size:0.72rem; margin-top:10px; min-height:1em; }
 
   /* ── QUIZ LAYOUT ── */
-  #quiz-screen {
-    display: none;
-    height: 100vh;
-    flex-direction: row;
-  }
+  #quiz-screen { display:none; height:100vh; flex-direction:row; }
 
-  /* MAIN PANEL */
   .main-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    padding: 20px 28px;
-    overflow: hidden;
-    min-width: 0;
+    flex:1; display:flex; flex-direction:column;
+    padding:20px 28px; overflow:hidden; min-width:0;
   }
 
   .quiz-header {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding-bottom: 14px;
-    border-bottom: 1px solid var(--border);
-    margin-bottom: 16px;
-    flex-shrink: 0;
+    display:flex; align-items:center; gap:16px;
+    padding-bottom:14px; border-bottom:1px solid var(--border);
+    margin-bottom:16px; flex-shrink:0;
   }
-
   .quiz-counter { font-size:0.68rem; color:var(--muted); letter-spacing:0.15em; text-transform:uppercase; white-space:nowrap; }
-  .quiz-counter span { color:var(--gold); }
+  .quiz-counter span { color:var(--accent); }
   .progress-bar { flex:1; height:2px; background:var(--border); }
-  .progress-fill { height:100%; background:var(--gold); transition:width 0.4s ease; }
+  .progress-fill { height:100%; background:var(--accent); transition:width 0.4s ease; }
+
+  .header-btns { display:flex; gap:12px; align-items:center; }
   .new-quiz-btn {
     background:none; border:none; color:var(--muted);
     font-family:'Courier Prime',monospace; font-size:0.68rem;
     letter-spacing:0.1em; text-transform:uppercase; cursor:pointer; white-space:nowrap;
   }
-  .new-quiz-btn:hover { color:var(--gold); }
+  .new-quiz-btn:hover { color:var(--accent); }
 
-  /* Question body */
-  .question-body {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    overflow: hidden;
-    min-height: 0;
+  /* Theme toggle */
+  .theme-toggle {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    width: 28px; height: 28px;
+    cursor: pointer;
+    font-size: 0.85rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: border-color 0.2s, color 0.2s;
+    flex-shrink: 0;
+    padding: 0;
   }
+  .theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+  .question-body { flex:1; display:flex; flex-direction:column; gap:12px; overflow:hidden; min-height:0; }
 
   .question-card {
-    flex: 1;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    padding: 24px 28px;
-    display: flex;
-    flex-direction: row;
-    gap: 24px;
-    overflow: hidden;
-    min-height: 0;
+    flex:1; background:var(--surface); border:1px solid var(--border);
+    padding:24px 28px; display:flex; flex-direction:row; gap:24px;
+    overflow:hidden; min-height:0;
+  }
+  .q-text-col { flex:1; display:flex; flex-direction:column; gap:10px; overflow-y:auto; min-width:0; }
+  .q-text-col::-webkit-scrollbar { width:3px; }
+  .q-text-col::-webkit-scrollbar-thumb { background:var(--border); }
+  .q-number { font-size:0.62rem; color:var(--accent-dim); letter-spacing:0.2em; text-transform:uppercase; flex-shrink:0; }
+  .q-text { font-family:'Cormorant Garamond',serif; font-size:clamp(1rem,1.8vw,1.3rem); line-height:1.75; color:var(--text); }
+  .q-image-col { flex-shrink:0; width:260px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+  .q-image { max-width:100%; max-height:100%; object-fit:contain; border:1px solid var(--border); }
+
+  @media (max-width:600px) {
+    .main-panel { padding-bottom:20px; }
+    .question-card { flex-direction:column; overflow-y:auto; }
+    .q-image-col { width:100%; height:180px; flex-shrink:0; }
+    .q-text-col { overflow-y:visible; }
   }
 
-  .q-text-col {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    overflow-y: auto;
-    min-width: 0;
-  }
-  .q-text-col::-webkit-scrollbar { width: 3px; }
-  .q-text-col::-webkit-scrollbar-thumb { background: var(--border); }
-
-  .q-number { font-size:0.62rem; color:var(--gold-dim); letter-spacing:0.2em; text-transform:uppercase; flex-shrink:0; }
-
-  .q-text {
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1rem, 1.8vw, 1.3rem);
-    line-height:1.75;
-    color:var(--cream);
-  }
-
-  .q-image-col {
-    flex-shrink: 0;
-    width: 260px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .q-image {
-    max-width: 100%;
-    max-height: 100%;
-    object-fit: contain;
-    filter: sepia(0.1);
-    border: 1px solid var(--border);
-  }
-
-  @media (max-width: 600px) {
-    .main-panel { padding-bottom: 20px; }
-    .question-card { flex-direction: column; overflow-y: auto; }
-    .q-image-col { width: 100%; height: 180px; flex-shrink: 0; }
-    .q-text-col { overflow-y: visible; }
-  }
-
-  /* Answer row */
   .answer-row {
-    flex-shrink: 0;
-    border: 1px solid var(--reveal-border);
-    background: var(--reveal-bg);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    min-height: 80px;
-    transition: opacity 0.25s;
+    flex-shrink:0; border:1px solid var(--reveal-border); background:var(--reveal-bg);
+    padding:14px 24px; display:flex; align-items:center; gap:20px;
+    min-height:80px; transition:opacity 0.25s;
   }
-  .answer-row.hidden { opacity: 0; pointer-events: none; }
+  .answer-row.hidden { opacity:0; pointer-events:none; }
+  .a-label { font-size:0.6rem; color:var(--accent); letter-spacing:0.2em; text-transform:uppercase; flex-shrink:0; }
+  .a-text { font-family:'Cormorant Garamond',serif; font-size:clamp(1.1rem,2vw,1.5rem); font-weight:600; color:var(--reveal-text); flex:1; }
+  .a-image { max-height:100px; max-width:180px; object-fit:contain; flex-shrink:0; }
 
-  .a-label { font-size:0.6rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; flex-shrink:0; }
-  .a-text {
-    font-family:'Cormorant Garamond',serif;
-    font-size:clamp(1.1rem, 2vw, 1.5rem);
-    font-weight:600;
-    color:var(--reveal-text);
-    flex:1;
-  }
-  .a-image { max-height: 100px; max-width: 180px; object-fit: contain; flex-shrink: 0; }
-
-  /* Controls row */
-  .controls-row {
-    flex-shrink: 0;
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
-
+  .controls-row { flex-shrink:0; display:flex; gap:10px; align-items:center; }
   .btn {
-    font-family:'Courier Prime',monospace;
-    font-size:0.72rem;
-    letter-spacing:0.1em;
-    text-transform:uppercase;
-    padding:10px 22px;
-    border:1px solid;
-    cursor:pointer;
-    background:none;
-    transition:all 0.15s;
-    white-space:nowrap;
+    font-family:'Courier Prime',monospace; font-size:0.72rem; letter-spacing:0.1em;
+    text-transform:uppercase; padding:10px 22px; border:1px solid;
+    cursor:pointer; background:none; transition:all 0.15s; white-space:nowrap;
   }
-  .btn-reveal { border-color:var(--gold); color:var(--gold); }
-  .btn-reveal:hover { background:var(--gold); color:var(--bg); }
+  .btn-reveal { border-color:var(--accent); color:var(--accent); }
+  .btn-reveal:hover { background:var(--accent); color:var(--bg); }
   .btn-prev { border-color:var(--border); color:var(--muted); }
-  .btn-prev:hover:not([disabled]) { border-color:var(--muted); color:var(--cream); }
-  .btn-next { border-color:var(--muted); color:var(--cream); margin-left:auto; }
-  .btn-next:hover { background:var(--gold); border-color:var(--gold); color:var(--bg); }
+  .btn-prev:hover:not([disabled]) { border-color:var(--muted); color:var(--text); }
+  .btn-next { border-color:var(--muted); color:var(--text); margin-left:auto; }
+  .btn-next:hover { background:var(--accent); border-color:var(--accent); color:var(--bg); }
 
   /* ── SIDEBAR ── */
   .sidebar {
-    width: var(--sidebar-w);
-    flex-shrink: 0;
-    border-left: 1px solid var(--border);
-    background: var(--surface);
-    display: flex;
-    flex-direction: column;
-    padding: 20px 14px;
-    gap: 10px;
+    width:var(--sidebar-w); flex-shrink:0; border-left:1px solid var(--border);
+    background:var(--surface); display:flex; flex-direction:column;
+    padding:20px 14px; gap:10px;
   }
-
   .sidebar-title {
-    font-size: 0.85rem;
-    color: var(--gold);
-    letter-spacing: 0.22em;
-    text-transform: uppercase;
-    padding-bottom: 12px;
-    border-bottom: 1px solid var(--border);
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    font-size:0.85rem; color:var(--accent); letter-spacing:0.22em; text-transform:uppercase;
+    padding-bottom:12px; border-bottom:1px solid var(--border); flex-shrink:0;
+    display:flex; align-items:center; justify-content:space-between;
   }
+  .sidebar-toggle { display:none; background:none; border:none; color:var(--muted); font-size:0.75rem; cursor:pointer; padding:2px 4px; font-family:'Courier Prime',monospace; }
+  .sidebar-toggle:hover { color:var(--accent); }
 
-  .sidebar-toggle {
-    display: none;
-    background: none;
-    border: none;
-    color: var(--muted);
-    font-size: 0.75rem;
-    cursor: pointer;
-    padding: 2px 4px;
-    font-family: 'Courier Prime', monospace;
-  }
-  .sidebar-toggle:hover { color: var(--gold); }
-
-  @media (max-width: 600px) {
-    #quiz-screen { flex-direction: column; }
-
-    .sidebar {
-      width: 100%;
-      border-left: none;
-      border-top: 1px solid var(--border);
-      flex-shrink: 0;
-      overflow: hidden;
-      transition: max-height 0.3s ease;
-      max-height: 48px;
-      padding: 0 14px;
-    }
-
-    .sidebar.open {
-      max-height: 500px;
-      padding: 0 14px 14px;
-    }
-
-    .sidebar-title {
-      height: 48px;
-      padding-bottom: 0;
-      border-bottom: none;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .sidebar.open .sidebar-title {
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 10px;
-    }
-
-    .sidebar-toggle { display: block; }
+  @media (max-width:600px) {
+    #quiz-screen { flex-direction:column; }
+    .sidebar { width:100%; border-left:none; border-top:1px solid var(--border); flex-shrink:0; overflow:hidden; transition:max-height 0.3s ease; max-height:48px; padding:0 14px; }
+    .sidebar.open { max-height:500px; padding:0 14px 14px; }
+    .sidebar-title { height:48px; padding-bottom:0; border-bottom:none; cursor:pointer; user-select:none; }
+    .sidebar.open .sidebar-title { border-bottom:1px solid var(--border); margin-bottom:10px; }
+    .sidebar-toggle { display:block; }
   }
 
   .team-card {
-    border: 1px solid var(--border);
-    padding: 10px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-    justify-content: space-between;
-    transition: border-color 0.2s;
+    border:1px solid var(--border); padding:10px 12px;
+    display:flex; flex-direction:column; gap:8px; flex:1;
+    justify-content:space-between; background:var(--surface); transition:border-color 0.2s;
   }
-  .team-card:focus-within { border-color: var(--gold-dim); }
-
+  .team-card:focus-within { border-color:var(--accent-dim); }
   .team-name-input {
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--border);
-    color: var(--cream);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.1rem;
-    letter-spacing: 0.04em;
-    width: 100%;
-    padding: 2px 0 4px;
-    outline: none;
-    transition: border-color 0.2s;
+    background:none; border:none; border-bottom:1px solid var(--border);
+    color:var(--text); font-family:'Cormorant Garamond',serif; font-size:1.1rem;
+    letter-spacing:0.04em; width:100%; padding:2px 0 4px; outline:none; transition:border-color 0.2s;
   }
-  .team-name-input:focus { border-bottom-color: var(--gold); }
-  .team-name-input::placeholder { color: var(--muted); }
-
-  .team-score-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .score-display {
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 2.8rem;
-    font-weight: 600;
-    color: var(--gold);
-    line-height: 1;
-    min-width: 48px;
-    text-align: right;
-  }
-
+  .team-name-input:focus { border-bottom-color:var(--accent); }
+  .team-name-input::placeholder { color:var(--muted); }
+  .team-score-row { display:flex; align-items:center; justify-content:space-between; }
+  .score-display { font-family:'Cormorant Garamond',serif; font-size:2.8rem; font-weight:600; color:var(--accent); line-height:1; min-width:48px; text-align:right; }
   .score-btns { display:flex; gap:6px; }
-
   .score-btn {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--border);
-    background: none;
-    color: var(--muted);
-    font-family: 'Courier Prime', monospace;
-    font-size: 1.1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
-    line-height: 1;
-    padding-bottom: 1px;
+    width:32px; height:32px; border:1px solid var(--border); background:none; color:var(--muted);
+    font-family:'Courier Prime',monospace; font-size:1.1rem; cursor:pointer;
+    display:flex; align-items:center; justify-content:center; transition:all 0.15s; line-height:1; padding-bottom:1px;
   }
-  .score-btn:hover { border-color:var(--gold); color:var(--gold); background: #1a1408; }
+  .score-btn:hover { border-color:var(--accent); color:var(--accent); }
   .score-btn.minus:hover { border-color:#a03030; color:#c06060; }
-
-  .score-label {
-    font-size: 0.52rem;
-    color: var(--muted);
-    letter-spacing: 0.08em;
-    opacity: 0.6;
-  }
+  .score-label { font-size:0.52rem; color:var(--muted); letter-spacing:0.08em; opacity:0.6; }
 
   /* ── LIGHTBOX ── */
-  #lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.88);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    cursor: zoom-out;
-  }
-  #lightbox.active { display: flex; }
-  #lightbox img {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
-    border: 1px solid var(--gold-dim);
-    box-shadow: 0 0 60px rgba(0,0,0,0.8);
-    animation: lbIn 0.2s ease;
-  }
+  #lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.88); z-index:1000; align-items:center; justify-content:center; cursor:zoom-out; }
+  #lightbox.active { display:flex; }
+  #lightbox img { max-width:90vw; max-height:90vh; object-fit:contain; border:1px solid var(--accent-dim); box-shadow:0 0 60px rgba(0,0,0,0.8); animation:lbIn 0.2s ease; }
   @keyframes lbIn { from{opacity:0;transform:scale(0.94)} to{opacity:1;transform:scale(1)} }
+  .zoomable { cursor:zoom-in; }
 
-  .zoomable { cursor: zoom-in; }
-
-  .setup-teams { width: min(440px, 100%); }
-
-  .setup-teams-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-
+  .setup-teams { width:min(440px,100%); }
+  .setup-teams-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .setup-team-input {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    color: var(--cream);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    padding: 10px 14px;
-    outline: none;
-    transition: border-color 0.2s;
-    width: 100%;
+    background:var(--surface); border:1px solid var(--border); color:var(--text);
+    font-family:'Cormorant Garamond',serif; font-size:1rem;
+    padding:10px 14px; outline:none; transition:border-color 0.2s; width:100%;
   }
-  .setup-team-input:focus { border-color: var(--gold); }
-  .setup-team-input::placeholder { color: var(--muted); font-style: italic; }
+  .setup-team-input:focus { border-color:var(--accent); }
+  .setup-team-input::placeholder { color:var(--muted); font-style:italic; }
 
-  /* End screen */
-  .end-screen {
-    flex:1; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:16px; text-align:center;
-  }
-  .end-screen .crown-icon { font-size:52px; }
-  .end-screen h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--gold); }
+  .end-screen { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; text-align:center; }
+  .end-screen .hero-icon { font-size:52px; }
+  .end-screen h2 { font-family:'Cormorant Garamond',serif; font-size:1.8rem; color:var(--accent); }
   .end-screen p { color:var(--muted); font-size:0.72rem; letter-spacing:0.1em; }
+
+  .upload-toggle-wrap {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+  }
 </style>
 </head>
 <body>
 
-<!-- Upload Screen -->
-<div id="upload-screen">
-  <div class="crown-icon">♛</div>
+<div id="upload-screen" style="position:relative">
+  <div class="upload-toggle-wrap">
+    <button class="theme-toggle" id="theme-toggle-upload" title="Toggle theme">☀</button>
+  </div>
+  <div class="hero-icon" id="hero-icon">♛</div>
   <div>
     <h1>Quiz</h1>
-    <div class="subtitle">Kings &amp; Queens Edition</div>
   </div>
 
   <div class="setup-teams">
@@ -519,12 +321,20 @@
 
   <div class="preset-section">
     <div class="preset-label">Select a quiz</div>
-    <button class="preset-btn" id="preset-btn">
+    <button class="preset-btn" id="preset-btn-dark">
       <div class="pc1"></div><div class="pc2"></div>
       <div class="preset-btn-icon">♛</div>
       <div class="preset-btn-text">
         <span class="preset-btn-title">Kings &amp; Queens</span>
         <span class="preset-btn-meta">24 questions · monarchs, royalty &amp; more</span>
+      </div>
+    </button>
+    <button class="preset-btn" id="preset-btn-light">
+      <div class="pc1"></div><div class="pc2"></div>
+      <div class="preset-btn-icon">✈</div>
+      <div class="preset-btn-text">
+        <span class="preset-btn-title">Airlines &amp; Aviation</span>
+        <span class="preset-btn-meta">9 questions · airports, flights &amp; more</span>
       </div>
     </button>
   </div>
@@ -534,30 +344,29 @@
   <div class="drop-zone" id="drop-zone">
     <div class="c1"></div><div class="c2"></div>
     <div class="drop-icon">⬆</div>
-    <div class="drop-text">
-      Drop your CSV here, or <strong id="browse-btn">browse</strong>
-    </div>
+    <div class="drop-text">Drop your CSV here, or <strong id="browse-btn">browse</strong></div>
     <div class="error-msg" id="error-msg"></div>
     <input type="file" id="file-input" accept=".csv">
   </div>
   <div class="format-hint">columns: questiontext · answer · questionimage · answerimage</div>
 </div>
 
-<!-- Quiz Screen -->
 <div id="quiz-screen">
-
   <div class="main-panel">
     <div class="quiz-header">
       <div class="quiz-counter">Q <span id="q-current">1</span> / <span id="q-total">0</span></div>
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-      <button class="new-quiz-btn" id="new-quiz-btn">↩ New Quiz</button>
+      <div class="header-btns">
+        <button class="theme-toggle" id="theme-toggle" title="Toggle theme">☀</button>
+        <button class="new-quiz-btn" id="new-quiz-btn">↩ New Quiz</button>
+      </div>
     </div>
     <div class="question-body" id="question-body"></div>
   </div>
 
   <div class="sidebar" id="sidebar">
     <div class="sidebar-title" id="sidebar-title">
-      <span>♛ Scoreboard</span>
+      <span id="sidebar-icon-label">♛ Scoreboard</span>
       <button class="sidebar-toggle" id="sidebar-toggle" aria-label="Toggle scoreboard">▼</button>
     </div>
     <div class="team-card" id="team-0"></div>
@@ -565,275 +374,299 @@
     <div class="team-card" id="team-2"></div>
     <div class="team-card" id="team-3"></div>
   </div>
-
 </div>
 
-<!-- Lightbox -->
 <div id="lightbox"><img id="lightbox-img" src="" alt=""></div>
 
 <script>
-  // ── Embedded quiz data ──
-  const BUILTIN_CSV = "questiontext,answer,questionimage,answerimage,difficulty,notes\n\"1890-1948: Queen's Day was first celebrated on 31st August, the birthday of Queen Wilhelmina.\n\n1949-1980: When Queen Juliana was coronated, the celebration was moved to her birthday on 30th April.\n\n1980-2014: During Queen Beatrix's rule, Queen's Day remained on 30th April and did not move to her birthday of 31st January.\n\nWhy?\",It's too cold in January!,https://amsterdamnightlifeticket.com/_i/52744.jpg,,easy,good\n\"Which luxury brand uses a golden crown as its logo and acts as one of the primary sponsors of several sporting events, including Wimbledon?\",Rolex,,https://cdn.worldvectorlogo.com/logos/rolex.svg,easy,weak\n\"Most coastal places on Earth see the highest tides every 14 days, at the new and full moons. \n\nAlso, the proximity of the Sun has an effect too, so the highest tides of the year occur when the Earth, Sun and Moon are all aligned, usually only a handful of days in a year. \n\nWhat term is used to refer to these highest tides, mostly in North America but also in other parts of the world?\",King Tides,https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/CSIRO_ScienceImage_10726_The_effects_of_a_king_tide_on_Queenslands_Gold_Coast.jpg/960px-CSIRO_ScienceImage_10726_The_effects_of_a_king_tide_on_Queenslands_Gold_Coast.jpg,,easy,weak\n\"This off-shoulder black silk evening gown designed by Christina Stambolian was worn by Diana, Princess of Wales at a 1994 fundraising dinner. It received massive coverage in the media due to being interpreted as having been worn by Diana \"\"in [BLANK]\"\", in response to a recent televised interview when Prince Charles admitted to having been unfaithful to her. \n\nWhat famous nickname did the press give this dress?\",Revenge Dress,\"https://hips.hearstapps.com/hmg-prod/images/princess-diana-arriving-at-the-serpentine-gallery-london-in-news-photo-1668030792.jpg?crop=1xw:0.67639xh;center,top&resize=980:*\",,medium,good\n\"The man who first discovered this skeleton in 1900, wrote \"\"I have never seen anything like it\"\". The then president of the American Museum of Natural History gave it its first full scientific name. The generic name was derived from the Greek words for tyrant and lizard, while the specific name was the Latin for 'king'. \n\nWhich creature?\",Tyrannosaurus rex,,https://image.smythstoys.com/zoom/246680.webp,easy,good\n\"When this item first arrived in London in 1850 and displayed to the public, it drew large crowds but was widely considered \"\"dull\"\" and unappealing, with one magazine even calling it \"\"Mountain of Darkness\"\".\n\nTo solve the problem, Prince Albert decided to hire Mozes Coster, a Dutch 'artisan' based in Amsterdam. Fun fact: His factory remains operational today on Museumplein! What exactly was he hired to do?\",Hired to recut the Koh-i-Noor,https://upload.wikimedia.org/wikipedia/en/1/18/Re-cutting_the_Koh-i-Noor_1852.jpg,,medium,good\n\"This iconic Hermes bag was created in the 1930s and named after a popular actress who also happened to be the then princess of Monaco. \n\nWhat is the bag called?\",Kelly bag (named after Grace Kelly),https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kelly_Bag.jpg/1280px-Kelly_Bag.jpg,,hard,weak\n\"Which role in a 2014 film that was partly short in Amsterdam, was originally offered to Kareena Kapoor and Priyanka Chopra, both of whom turned it down?\",Queen,,https://upload.wikimedia.org/wikipedia/en/4/45/QueenMoviePoster7thMarch.jpg,easy,good\n\"Scientifically, the King [BLANK] is famously not a [BLANK] at all. It is only called that because (a) it kinda-sorta looks like one, and (b) because it regularly eats other [BLANKs]. \n\nIn fact its scientific name is 'ophiophagus', which is derived from the Greek for [BLANK]-eating. \n\nFill in the blank.\",King Cobra,,https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/12_-_The_Mystical_King_Cobra_and_Coffee_Forests.jpg/500px-12_-_The_Mystical_King_Cobra_and_Coffee_Forests.jpg,medium,good\n\"This is Larry King. He's not the famous television presenter Larry King, but he is responsible for the last name of one of the greatest athletes of all time. \n\nWho is this athelete, who credits him for turning her into a feminist and who remained legally married to him for many years after she came out as lesbian?\",Billie Jean King,https://people.com/thmb/Zd6jTlJW2bFvTRoGJKU3lIlBcMs=/4000x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(749x0:751x2)/billie-jean-king-larry-king-012926-3-d71fc5d08eca44fabd040dbd5eb4099b.jpg,,easy,good\n\"Although today this automobile brand is an entirely Indian manufacturer with headquarters in Chennai, it was originally an English company founded in 1901. They were permitted to use the first part of their name because they had won contracts to supply precision parts for firearms to a government-owned rifle factory in Middlesex. \n\nThe Indian factories have been active since the 1950s and their products remain extremely popular in the streets of India even today. \n\nWhich brand?\",Royal Enfield,,https://i.pinimg.com/736x/0e/69/3f/0e693f68feea0c901f30a11fb6fb8b13.jpg,medium,good\n\"Which existing brand was relaunched by Vijay Mallya in 1978 and was initially marketed through surrogate advertisements of mineral water? \n\nThe same group also operated a low-cost airline service between 2005 and 2012.\",Kingfisher,,https://upload.wikimedia.org/wikipedia/en/0/08/Kingfisher_beer_logo.png,easy,good\n\"Manikarnika Tambe was born to a Marathi family in Varanasi and was married off at a young age to Gangadhar Rao, the ruler of an independent princely state in the 19th century. \n\nTheir only son died young, forcing Manikarnika to assume power after Gangadhar died in order to fight against British Rule. She resisted for almost 5 years until she was killed in a last stand battle at Gwalior Fort. \n\nHow do we better know Manikarnika?\",Rani of Jhansi,,https://upload.wikimedia.org/wikipedia/commons/e/eb/Rani_of_jhansi.jpg,medium,good\n\"What term, familiar to us from its use in a boardgame, originates from the Persian phrase meaning \"\"the king is dead\"\"?\",Checkmate ('shah mat'),,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc6wgGeL3GCrHhcx1dKJ6d4AVEtBvONUS0bA&s,easy,good\n\"This work of art is an 18th century musical automaton, carved and painted to show a tiger mauling a European man. When it's turned on, one hand of the man moves, and he emits a wailing sounds while the tiger grunts.\n\nWho commissioned this work as part of his anti British messaging around 1795? \n\nToday it stands in the V&A Museum in London, a defeated king's toy, displayed as a trophy by the empire that killed him.\",Tipu Sultan,https://upload.wikimedia.org/wikipedia/commons/1/1a/Tipu%27s_Tiger_with_keyboard_on_display_2006AH4168.jpg,,medium,good\n\"Name this character from Asterix and the Chariot Race, which sees Asterix and Obelix compete in a race endorsed by Roman ruler Julius Caesar. \n\nThe comic was released in 2017, and this character's name caused many to claim that Asterix had \"\"predicted\"\" something 3 years before it happened, simply because the wore a mask.\",Coronavirus,https://i.imgur.com/3U9HDY8.png,https://i.imgur.com/9iiVhJ7.png,hard,good\n\"Depending on the country you're in, these are the measurements expected from which common item?\",King size mattress,https://i.imgur.com/yo9Q88b.png,,easy,good\n\"Michael King was an American Baptist pastor who got married in 1926, had a son in 1929, and was selected by his church for a multinational trip in 1934. During this trip, Michael visited many sites in Germany that were associated with a Reformist leader from the 16th century. \n\nWhen he got back home, Michael changed his own name to honour the Reformist leader, and also changed his son's name to match his. \n\nWhat was his son's name?\",Martin Luther King Jr,,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL74j5AJ0y64lYyhRjTk2LTHcyWA33sP30yg&s,easy,good\n\"This is the Unisphere in Flushing Meadows. Flushing Meadows is a park located in which borough of New York? \n\nIt is said to have been named in 1683 after Catherine of Braganza, who was married to the King of England at the time, Charles II.\",Queens,https://upload.wikimedia.org/wikipedia/commons/4/4a/Flushing_Meadows_May_2024_64.jpg,,medium,good\n\"Most of Aristotle's observations in his book 'History of Animals' regarding this particular insect are quite sound, but he did make one pretty huge mistake in a term he used, possibly due to his own personal biases about who could rule. \n\nFor nearly 2000 years, people continued using this obviously incorrect term. Finally in 1609, the term was corrected in a book by an English biologist, whose worldview might have been affected by the monarch he was serving under. \n\nWhich insect and what incorrect term?\",He called them King bees instead of Queen bees (even though they were quite obviously female),https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf9HA8UwdPl88amq0J2Ufdnw4aGNoiLmSKWg&s,,hard,good\n\"Aditya Prateek Singh started his music career under the stage name \"\"Cool Equal\"\", but changed it when he received some advice from someone who thought he lived \"\"like a [BLANK]\"\", i.e. he would only wake up or call when he wanted to. \n\nWhat new name did he take and whom did he receive the advice from?\",\"Badshah, Honey Singh\",,https://media.assettype.com/outlookindia/2025-01-14/1rfgmstu/1.png?w=801&auto=format%2Ccompress&fit=max&format=webp&dpr=1.0,easy,good\n\"The Lion King: The Gift' is a companion album that was released alongside the 2019 Disney remake of Lion King. The album was curated and produced by which musician who also voiced a character in the movie? \n\nA Telegraph review of the album was titled \"\"All hail the lion queen\"\"\",Beyonce,https://upload.wikimedia.org/wikipedia/en/1/11/The_Lion_King_The_Gift.png,https://www.rollingstone.com/wp-content/uploads/2019/07/beyonce-lion-king-IG.jpg?w=1400&h=910&crop=1,medium,good\n\"Which Indian brand uses a member of the monarchy as both its sometimes-used logo as well as the name of its loyalty club? \n\n\"\"We call him a [BLANK] for want of a better description. But his blood isn't blue. He may look like royalty, but he isn't royal.\"\"\",Air India (The Maharaja),,https://upload.wikimedia.org/wikipedia/en/d/d6/Air_india_maharajah.jpg,easy,good\n\"The 'king' variety of this creature was first described in 1768. Nearly 76 years later, English zoologist George Robert Gray came across a related but larger, more impressive specimen. \n\nWhat kind of creature was he documenting, and what did he call it?\",Emperor Penguin,,https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg/500px-Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg,easy,good";
-
-  // ── Lightbox ──
-  const lightbox = document.getElementById('lightbox');
-  const lightboxImg = document.getElementById('lightbox-img');
-
-  document.addEventListener('click', e => {
-    if (e.target.classList.contains('zoomable')) {
-      lightboxImg.src = e.target.src;
-      lightbox.classList.add('active');
-    }
-  });
-  lightbox.addEventListener('click', () => lightbox.classList.remove('active'));
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { lightbox.classList.remove('active'); return; }
-    if (lightbox.classList.contains('active')) return;
-    if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-    if (e.key === ' ') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
-    if (e.key === 'ArrowRight') { const btn = document.getElementById('next-btn'); if (btn) btn.click(); }
-    if (e.key === 'ArrowLeft') { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
-  });
-
-  const uploadScreen = document.getElementById('upload-screen');
-  const quizScreen   = document.getElementById('quiz-screen');
-  const dropZone     = document.getElementById('drop-zone');
-  const fileInput    = document.getElementById('file-input');
-  const browseBtn    = document.getElementById('browse-btn');
-  const errorMsg     = document.getElementById('error-msg');
-  const qCurrent     = document.getElementById('q-current');
-  const qTotal       = document.getElementById('q-total');
-  const progressFill = document.getElementById('progress-fill');
-  const questionBody = document.getElementById('question-body');
-  const newQuizBtn   = document.getElementById('new-quiz-btn');
-  const presetBtn    = document.getElementById('preset-btn');
-
-  let questions = [];
-  let currentIndex = 0;
-  let answerVisible = false;
-
-  const teams = [
-    { name: 'Team 1', score: 0 },
-    { name: 'Team 2', score: 0 },
-    { name: 'Team 3', score: 0 },
-    { name: 'Team 4', score: 0 },
-  ];
-
-  function buildTeamCards() {
-    teams.forEach((team, i) => {
-      const card = document.getElementById(`team-${i}`);
-      card.innerHTML = `
-        <input class="team-name-input" type="text" value="${team.name.replace(/"/g,'&quot;')}" placeholder="Team ${i+1}" data-i="${i}">
-        <div class="team-score-row">
-          <div class="score-btns">
-            <button class="score-btn minus" data-i="${i}" data-d="-5" title="−5">−</button>
-            <button class="score-btn plus"  data-i="${i}" data-d="5"  title="+5">+</button>
-          </div>
-          <div class="score-display" id="score-${i}">${team.score}</div>
-        </div>
-        <div class="score-label">± 5 per click</div>
-      `;
-    });
-
-    document.querySelectorAll('.team-name-input').forEach(inp => {
-      inp.addEventListener('input', e => { teams[+e.target.dataset.i].name = e.target.value; });
-    });
-
-    document.querySelectorAll('.score-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const i = +btn.dataset.i;
-        const d = +btn.dataset.d;
-        teams[i].score = Math.max(0, teams[i].score + d);
-        document.getElementById(`score-${i}`).textContent = teams[i].score;
-      });
-    });
+const QUIZZES = {
+  dark: {
+    theme: 'dark',
+    icon: '♛',
+    subtitle: 'Kings &amp; Queens Edition',
+    readyIcon: '♛',
+    readyTitle: 'Ready?',
+    finishLabel: 'Finish ♛',
+    sidebarLabel: '♛ Scoreboard',
+    csv: "questiontext,answer,questionimage,answerimage,difficulty,notes\n\"1890-1948: Queen's Day was first celebrated on 31st August, the birthday of Queen Wilhelmina.\n\n1949-1980: When Queen Juliana was coronated, the celebration was moved to her birthday on 30th April.\n\n1980-2014: During Queen Beatrix's rule, Queen's Day remained on 30th April and did not move to her birthday of 31st January.\n\nWhy?\",It's too cold in January!,https://amsterdamnightlifeticket.com/_i/52744.jpg,,easy,good\n\"Which luxury brand uses a golden crown as its logo and acts as one of the primary sponsors of several sporting events, including Wimbledon?\",Rolex,,https://cdn.worldvectorlogo.com/logos/rolex.svg,easy,weak\n\"Most coastal places on Earth see the highest tides every 14 days, at the new and full moons. \n\nAlso, the proximity of the Sun has an effect too, so the highest tides of the year occur when the Earth, Sun and Moon are all aligned, usually only a handful of days in a year. \n\nWhat term is used to refer to these highest tides, mostly in North America but also in other parts of the world?\",King Tides,https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/CSIRO_ScienceImage_10726_The_effects_of_a_king_tide_on_Queenslands_Gold_Coast.jpg/960px-CSIRO_ScienceImage_10726_The_effects_of_a_king_tide_on_Queenslands_Gold_Coast.jpg,,easy,weak\n\"This off-shoulder black silk evening gown designed by Christina Stambolian was worn by Diana, Princess of Wales at a 1994 fundraising dinner. It received massive coverage in the media due to being interpreted as having been worn by Diana \"\"in [BLANK]\"\", in response to a recent televised interview when Prince Charles admitted to having been unfaithful to her. \n\nWhat famous nickname did the press give this dress?\",Revenge Dress,\"https://hips.hearstapps.com/hmg-prod/images/princess-diana-arriving-at-the-serpentine-gallery-london-in-news-photo-1668030792.jpg?crop=1xw:0.67639xh;center,top&resize=980:*\",,medium,good\n\"The man who first discovered this skeleton in 1900, wrote \"\"I have never seen anything like it\"\". The then president of the American Museum of Natural History gave it its first full scientific name. The generic name was derived from the Greek words for tyrant and lizard, while the specific name was the Latin for 'king'. \n\nWhich creature?\",Tyrannosaurus rex,,https://image.smythstoys.com/zoom/246680.webp,easy,good\n\"When this item first arrived in London in 1850 and displayed to the public, it drew large crowds but was widely considered \"\"dull\"\" and unappealing, with one magazine even calling it \"\"Mountain of Darkness\"\".\n\nTo solve the problem, Prince Albert decided to hire Mozes Coster, a Dutch 'artisan' based in Amsterdam. Fun fact: His factory remains operational today on Museumplein! What exactly was he hired to do?\",Hired to recut the Koh-i-Noor,https://upload.wikimedia.org/wikipedia/en/1/18/Re-cutting_the_Koh-i-Noor_1852.jpg,,medium,good\n\"This iconic Hermes bag was created in the 1930s and named after a popular actress who also happened to be the then princess of Monaco. \n\nWhat is the bag called?\",Kelly bag (named after Grace Kelly),https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Kelly_Bag.jpg/1280px-Kelly_Bag.jpg,,hard,weak\n\"Which role in a 2014 film that was partly short in Amsterdam, was originally offered to Kareena Kapoor and Priyanka Chopra, both of whom turned it down?\",Queen,,https://upload.wikimedia.org/wikipedia/en/4/45/QueenMoviePoster7thMarch.jpg,easy,good\n\"Scientifically, the King [BLANK] is famously not a [BLANK] at all. It is only called that because (a) it kinda-sorta looks like one, and (b) because it regularly eats other [BLANKs]. \n\nIn fact its scientific name is 'ophiophagus', which is derived from the Greek for [BLANK]-eating. \n\nFill in the blank.\",King Cobra,,https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/12_-_The_Mystical_King_Cobra_and_Coffee_Forests.jpg/500px-12_-_The_Mystical_King_Cobra_and_Coffee_Forests.jpg,medium,good\n\"This is Larry King. He's not the famous television presenter Larry King, but he is responsible for the last name of one of the greatest athletes of all time. \n\nWho is this athelete, who credits him for turning her into a feminist and who remained legally married to him for many years after she came out as lesbian?\",Billie Jean King,https://people.com/thmb/Zd6jTlJW2bFvTRoGJKU3lIlBcMs=/4000x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(749x0:751x2)/billie-jean-king-larry-king-012926-3-d71fc5d08eca44fabd040dbd5eb4099b.jpg,,easy,good\n\"Although today this automobile brand is an entirely Indian manufacturer with headquarters in Chennai, it was originally an English company founded in 1901. They were permitted to use the first part of their name because they had won contracts to supply precision parts for firearms to a government-owned rifle factory in Middlesex. \n\nThe Indian factories have been active since the 1950s and their products remain extremely popular in the streets of India even today. \n\nWhich brand?\",Royal Enfield,,https://i.pinimg.com/736x/0e/69/3f/0e693f68feea0c901f30a11fb6fb8b13.jpg,medium,good\n\"Which existing brand was relaunched by Vijay Mallya in 1978 and was initially marketed through surrogate advertisements of mineral water? \n\nThe same group also operated a low-cost airline service between 2005 and 2012.\",Kingfisher,,https://upload.wikimedia.org/wikipedia/en/0/08/Kingfisher_beer_logo.png,easy,good\n\"Manikarnika Tambe was born to a Marathi family in Varanasi and was married off at a young age to Gangadhar Rao, the ruler of an independent princely state in the 19th century. \n\nTheir only son died young, forcing Manikarnika to assume power after Gangadhar died in order to fight against British Rule. She resisted for almost 5 years until she was killed in a last stand battle at Gwalior Fort. \n\nHow do we better know Manikarnika?\",Rani of Jhansi,,https://upload.wikimedia.org/wikipedia/commons/e/eb/Rani_of_jhansi.jpg,medium,good\n\"What term, familiar to us from its use in a boardgame, originates from the Persian phrase meaning \"\"the king is dead\"\"?\",Checkmate ('shah mat'),,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQc6wgGeL3GCrHhcx1dKJ6d4AVEtBvONUS0bA&s,easy,good\n\"This work of art is an 18th century musical automaton, carved and painted to show a tiger mauling a European man. When it's turned on, one hand of the man moves, and he emits a wailing sounds while the tiger grunts.\n\nWho commissioned this work as part of his anti British messaging around 1795? \n\nToday it stands in the V&A Museum in London, a defeated king's toy, displayed as a trophy by the empire that killed him.\",Tipu Sultan,https://upload.wikimedia.org/wikipedia/commons/1/1a/Tipu%27s_Tiger_with_keyboard_on_display_2006AH4168.jpg,,medium,good\n\"Name this character from Asterix and the Chariot Race, which sees Asterix and Obelix compete in a race endorsed by Roman ruler Julius Caesar. \n\nThe comic was released in 2017, and this character's name caused many to claim that Asterix had \"\"predicted\"\" something 3 years before it happened, simply because the wore a mask.\",Coronavirus,https://i.imgur.com/3U9HDY8.png,https://i.imgur.com/9iiVhJ7.png,hard,good\n\"Depending on the country you're in, these are the measurements expected from which common item?\",King size mattress,https://i.imgur.com/yo9Q88b.png,,easy,good\n\"Michael King was an American Baptist pastor who got married in 1926, had a son in 1929, and was selected by his church for a multinational trip in 1934. During this trip, Michael visited many sites in Germany that were associated with a Reformist leader from the 16th century. \n\nWhen he got back home, Michael changed his own name to honour the Reformist leader, and also changed his son's name to match his. \n\nWhat was his son's name?\",Martin Luther King Jr,,https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQL74j5AJ0y64lYyhRjTk2LTHcyWA33sP30yg&s,easy,good\n\"This is the Unisphere in Flushing Meadows. Flushing Meadows is a park located in which borough of New York? \n\nIt is said to have been named in 1683 after Catherine of Braganza, who was married to the King of England at the time, Charles II.\",Queens,https://upload.wikimedia.org/wikipedia/commons/4/4a/Flushing_Meadows_May_2024_64.jpg,,medium,good\n\"Most of Aristotle's observations in his book 'History of Animals' regarding this particular insect are quite sound, but he did make one pretty huge mistake in a term he used, possibly due to his own personal biases about who could rule. \n\nFor nearly 2000 years, people continued using this obviously incorrect term. Finally in 1609, the term was corrected in a book by an English biologist, whose worldview might have been affected by the monarch he was serving under. \n\nWhich insect and what incorrect term?\",He called them King bees instead of Queen bees (even though they were quite obviously female),https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf9HA8UwdPl88amq0J2Ufdnw4aGNoiLmSKWg&s,,hard,good\n\"Aditya Prateek Singh started his music career under the stage name \"\"Cool Equal\"\", but changed it when he received some advice from someone who thought he lived \"\"like a [BLANK]\"\", i.e. he would only wake up or call when he wanted to. \n\nWhat new name did he take and whom did he receive the advice from?\",\"Badshah, Honey Singh\",,https://media.assettype.com/outlookindia/2025-01-14/1rfgmstu/1.png?w=801&auto=format%2Ccompress&fit=max&format=webp&dpr=1.0,easy,good\n\"The Lion King: The Gift' is a companion album that was released alongside the 2019 Disney remake of Lion King. The album was curated and produced by which musician who also voiced a character in the movie? \n\nA Telegraph review of the album was titled \"\"All hail the lion queen\"\"\",Beyonce,https://upload.wikimedia.org/wikipedia/en/1/11/The_Lion_King_The_Gift.png,https://www.rollingstone.com/wp-content/uploads/2019/07/beyonce-lion-king-IG.jpg?w=1400&h=910&crop=1,medium,good\n\"Which Indian brand uses a member of the monarchy as both its sometimes-used logo as well as the name of its loyalty club? \n\n\"\"We call him a [BLANK] for want of a better description. But his blood isn't blue. He may look like royalty, but he isn't royal.\"\"\",Air India (The Maharaja),,https://upload.wikimedia.org/wikipedia/en/d/d6/Air_india_maharajah.jpg,easy,good\n\"The 'king' variety of this creature was first described in 1768. Nearly 76 years later, English zoologist George Robert Gray came across a related but larger, more impressive specimen. \n\nWhat kind of creature was he documenting, and what did he call it?\",Emperor Penguin,,https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg/500px-Aptenodytes_forsteri_-Snow_Hill_Island%2C_Antarctica_-adults_and_juvenile-8.jpg,easy,good"
+  },
+  light: {
+    theme: 'light',
+    icon: '✈',
+    subtitle: 'Airlines &amp; Aviation Edition',
+    readyIcon: '✈',
+    readyTitle: 'Ready for takeoff?',
+    finishLabel: 'Finish ✈',
+    sidebarLabel: '✈ Scoreboard',
+    csv: "questiontext,answer,questionimage,answerimage,difficulty,notes\n\"The popular story (probably untrue) is that the official name of this place translates to \"\"ship's grave\"\", a reference to the many vessels that supposedly sank in the lake that once covered the area. The lake was drained in the 19th century, and the current buildings sit at approximately 4 meters below sea level. This makes it one of the lowest lying such structures in the world.\n\nWhat are we talking about?\",Schiphol,,https://upload.wikimedia.org/wikipedia/commons/c/c9/Amsterdam_Schiphol_Airport_entrance.jpg,,\n\"This device exists on every commercial aircraft in the world. It is the single most important that investigators will seek out in the event of an incident.\n\nDespite its name, it is actually required by safety regulations to be painted a bright orange colour.\n\nWhat is this device called?\",Black box (flight recorder),,https://static.dw.com/image/17546715_1006.jpg,,\n\"Since the 1950s, KLM has given a small ceramic gift to its Business Class passengers at the end of every long-haul flight. \n\nWhen the tradition began, there was an aviation regulation that prohibited airlines from giving passengers gifts above a certain monetary value. \n\nWhat did KLM do to get around this regulation? The loophole they found allowed the item to be considered a beverage rather than a gift.\",\"Miniature Delft Blue houses, filled with Bols genever\",https://s3-eu-west-1.amazonaws.com/tpd/logos/46d5b8b8000064000500d66e/0x0.png,https://runway-media-production.global.ssl.fastly.net/us/originals/2024/10/5_A-sampling-of-the-Delftware-miniature-houses-KLM-gives-to-World-Business-Class-passengers-on-Interconintental-flights.-The-houses-are-filled-with-Dutch-gin.-scaled.jpg,,\n\"This term was standardised for use in aviation and maritime context in 1927 by a British radio officer named Frederick Mockford. He needed a word that would be easily understood by English and French crews (the busiest flight route at the time) so he opted for a phrase that in French meant \"\"help me\"\". \n\nWhat is the term used?\",\"Mayday \u2014 from French m'aidez / m'aider, meaning 'help me'\",https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ23E8OvQKkG1Rzp8VgZA8vBrxJgFhBdjNV0Q&s,,,\n\"On commercial flights, there is a rule \u2014 followed by most major airlines \u2014 that the captain and first officer must order different meals from each other. They are not permitted to eat the same thing.\n\nWhy?\",To prevent food poisoning from incapacitating both pilots simultaneously,,,,\n\"In 1947, an Irish businessman named Brendan O'Regan had a simple legal insight: passengers in transit between two countries are technically in neither country at that moment, so some 'normal' rules don't apply to them.\n\nWhat did he invent on the back of this insight, which you can now find in virtually every airport in the world?\",\"Duty-free shopping (the world's first duty-free shop, at Shannon Airport, Ireland)\",,\"https://transcode-v2.app.engoo.com/image/fetch/f_auto,c_lfill,w_300,dpr_3/https://assets.app.engoo.com/images/0KMALWgr5nY4CSm8hd3BDL.jpeg\",,\n\"Airports have 3-letter IATA code. Some are obvious, like ATL for Atlanta or AMS for Amsterdam. Others are less obvious like ORD for Chicago.\n\nWhat do the IATA codes for Los Angeles, Portland, Phoenix and Birmingham have in common, and what is the explanation for it?\",\"LAX, PDX, PHX and BHX.\n\nThey were originally two-letter codes. When the system expanded to 3 letters in the 1940s, X was simply appended as a filler.\",,,,\n\"In 2021, a Parliament of India report described the IATA code for this city as \"\"inappropriate, unsuitable, offensive and embarrassing\"\" due to the city's religious significance. The request was rejected by IATA in February 2022, and was critized by groups in India as being reflective of homophobia.\n\nWhich Indian city? And what was the code?\",Gaya Airport (IATA: GAY),https://i.imgur.com/CmtRVz6.png,https://upload.wikimedia.org/wikipedia/commons/4/46/Gaya_Airport_GAY.jpg,,\n\"While we are on this topic, please tell me the IATA codes for:\n\n1. Omega Station Airport in Namibia\n\n2. Lovelock Derby Feild in Nevada, USA\",OMG LOL,,,,\n"
   }
+};
 
-  // ── Mobile sidebar toggle ──
-  const sidebar = document.getElementById('sidebar');
-  const sidebarTitle = document.getElementById('sidebar-title');
-  const sidebarToggle = document.getElementById('sidebar-toggle');
+let currentQuiz = null;
 
-  sidebarTitle.addEventListener('click', () => {
-    const open = sidebar.classList.toggle('open');
-    sidebarToggle.textContent = open ? '▲' : '▼';
-  });
+// ── Theme ──
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme === 'light' ? 'light' : '');
+  const icon = theme === 'light' ? '🌙' : '☀';
+  document.getElementById('theme-toggle').textContent = icon;
+  document.getElementById('theme-toggle-upload').textContent = icon;
+}
 
-  // Preset quiz
-  presetBtn.addEventListener('click', () => parseCSV(BUILTIN_CSV));
-  browseBtn.addEventListener('click', () => fileInput.click());
-  fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
-  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
-  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
-  newQuizBtn.addEventListener('click', () => {
-    quizScreen.style.display = 'none';
-    uploadScreen.style.display = 'flex';
-    fileInput.value = '';
-    errorMsg.textContent = '';
-  });
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme');
+  setTheme(current === 'light' ? 'dark' : 'light');
+}
 
-  function handleFile(file) {
-    if (!file) return;
-    if (!file.name.endsWith('.csv')) { errorMsg.textContent = 'Please upload a .csv file.'; return; }
-    const reader = new FileReader();
-    reader.onload = e => parseCSV(e.target.result);
-    reader.readAsText(file);
-  }
+document.getElementById('theme-toggle').addEventListener('click', toggleTheme);
+document.getElementById('theme-toggle-upload').addEventListener('click', toggleTheme);
 
-  function parseCSV(text) {
-    // Normalize line endings
-    text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
-    const rows = splitCSVRows(text);
-    if (rows.length < 2) { errorMsg.textContent = 'CSV appears empty.'; return; }
-    const first = rows[0][0] ? rows[0][0].toLowerCase() : '';
-    const hasHeader = first.includes('questiontext') || first.includes('answer');
-    const dataRows = hasHeader ? rows.slice(1) : rows;
-    const parsed = dataRows.map(cols => ({
-      questiontext:  (cols[0]||'').trim(),
-      answer:        (cols[1]||'').trim(),
-      questionimage: (cols[2]||'').trim(),
-      answerimage:   (cols[3]||'').trim(),
-    })).filter(q => q.questiontext);
-    if (!parsed.length) { errorMsg.textContent = 'No valid questions found.'; return; }
-    questions = parsed;
-    currentIndex = 0;
-    startQuiz();
-  }
+// ── Lightbox ──
+const lightbox = document.getElementById('lightbox');
+const lightboxImg = document.getElementById('lightbox-img');
+document.addEventListener('click', e => {
+  if (e.target.classList.contains('zoomable')) { lightboxImg.src = e.target.src; lightbox.classList.add('active'); }
+});
+lightbox.addEventListener('click', () => lightbox.classList.remove('active'));
 
-  // Proper RFC 4180 CSV parser — handles quoted fields, embedded commas, newlines, and "" escaped quotes
-  function splitCSVRows(text) {
-    const rows = [];
-    let row = [];
-    let current = '';
-    let inQuotes = false;
-    let i = 0;
-    while (i < text.length) {
-      const ch = text[i];
-      if (inQuotes) {
-        if (ch === '"') {
-          if (text[i+1] === '"') { current += '"'; i += 2; continue; } // escaped quote
-          else { inQuotes = false; i++; continue; }
-        }
-        current += ch; i++;
-      } else {
-        if (ch === '"') { inQuotes = true; i++; continue; }
-        if (ch === ',') { row.push(current); current = ''; i++; continue; }
-        if (ch === '\n') { row.push(current); rows.push(row); row = []; current = ''; i++; continue; }
-        current += ch; i++;
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') { lightbox.classList.remove('active'); return; }
+  if (lightbox.classList.contains('active')) return;
+  if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+  if (e.key === ' ') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
+  if (e.key === 'ArrowRight') { const btn = document.getElementById('next-btn'); if (btn) btn.click(); }
+  if (e.key === 'ArrowLeft') { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
+});
+
+const uploadScreen = document.getElementById('upload-screen');
+const quizScreen   = document.getElementById('quiz-screen');
+const dropZone     = document.getElementById('drop-zone');
+const fileInput    = document.getElementById('file-input');
+const browseBtn    = document.getElementById('browse-btn');
+const errorMsg     = document.getElementById('error-msg');
+const qCurrent     = document.getElementById('q-current');
+const qTotal       = document.getElementById('q-total');
+const progressFill = document.getElementById('progress-fill');
+const questionBody = document.getElementById('question-body');
+const newQuizBtn   = document.getElementById('new-quiz-btn');
+
+let questions = [];
+let currentIndex = 0;
+let answerVisible = false;
+
+const teams = [
+  { name: 'Team 1', score: 0 },
+  { name: 'Team 2', score: 0 },
+  { name: 'Team 3', score: 0 },
+  { name: 'Team 4', score: 0 },
+];
+
+// Preset buttons
+document.getElementById('preset-btn-dark').addEventListener('click', () => {
+  setTheme('dark');
+  parseCSV(QUIZZES.dark.csv, QUIZZES.dark);
+});
+document.getElementById('preset-btn-light').addEventListener('click', () => {
+  setTheme('light');
+  parseCSV(QUIZZES.light.csv, QUIZZES.light);
+});
+
+browseBtn.addEventListener('click', () => fileInput.click());
+fileInput.addEventListener('change', e => handleFile(e.target.files[0]));
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); handleFile(e.dataTransfer.files[0]); });
+newQuizBtn.addEventListener('click', () => {
+  quizScreen.style.display = 'none';
+  uploadScreen.style.display = 'flex';
+  fileInput.value = '';
+  errorMsg.textContent = '';
+});
+
+// Mobile sidebar toggle
+const sidebar = document.getElementById('sidebar');
+const sidebarTitle = document.getElementById('sidebar-title');
+const sidebarToggle = document.getElementById('sidebar-toggle');
+sidebarTitle.addEventListener('click', () => {
+  const open = sidebar.classList.toggle('open');
+  sidebarToggle.textContent = open ? '▲' : '▼';
+});
+
+function handleFile(file) {
+  if (!file) return;
+  if (!file.name.endsWith('.csv')) { errorMsg.textContent = 'Please upload a .csv file.'; return; }
+  const reader = new FileReader();
+  reader.onload = e => parseCSV(e.target.result, null);
+  reader.readAsText(file);
+}
+
+function parseCSV(text, quizMeta) {
+  text = text.replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const rows = splitCSVRows(text);
+  if (rows.length < 2) { errorMsg.textContent = 'CSV appears empty.'; return; }
+  const first = rows[0][0] ? rows[0][0].toLowerCase() : '';
+  const hasHeader = first.includes('questiontext') || first.includes('answer');
+  const dataRows = hasHeader ? rows.slice(1) : rows;
+  const parsed = dataRows.map(cols => ({
+    questiontext:  (cols[0]||'').trim(),
+    answer:        (cols[1]||'').trim(),
+    questionimage: (cols[2]||'').trim(),
+    answerimage:   (cols[3]||'').trim(),
+  })).filter(q => q.questiontext);
+  if (!parsed.length) { errorMsg.textContent = 'No valid questions found.'; return; }
+  questions = parsed;
+  currentIndex = 0;
+  currentQuiz = quizMeta;
+  startQuiz();
+}
+
+function splitCSVRows(text) {
+  const rows = []; let row = []; let current = ''; let inQuotes = false; let i = 0;
+  while (i < text.length) {
+    const ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i+1] === '"') { current += '"'; i += 2; continue; }
+        else { inQuotes = false; i++; continue; }
       }
-    }
-    row.push(current);
-    if (row.some(c => c.trim())) rows.push(row);
-    return rows;
-  }
-
-  function startQuiz() {
-    // Read any names entered on the upload screen
-    document.querySelectorAll('.setup-team-input').forEach(inp => {
-      const i = +inp.dataset.i;
-      if (inp.value.trim()) teams[i].name = inp.value.trim();
-    });
-    uploadScreen.style.display = 'none';
-    quizScreen.style.display = 'flex';
-    buildTeamCards();
-    qTotal.textContent = questions.length;
-    showReady();
-  }
-
-  function showReady() {
-    answerVisible = false;
-    progressFill.style.width = '0%';
-    qCurrent.textContent = '—';
-    questionBody.innerHTML = `
-      <div class="end-screen">
-        <div class="crown-icon">♛</div>
-        <h2>Ready?</h2>
-        <p>${questions.length} questions loaded</p>
-        <button class="btn btn-reveal" id="start-btn">Start Quiz</button>
-      </div>
-    `;
-    document.getElementById('start-btn').addEventListener('click', () => {
-      currentIndex = 0;
-      renderQuestion();
-    });
-  }
-
-  function renderQuestion() {
-    answerVisible = false;
-    const q = questions[currentIndex];
-    const isLast = currentIndex === questions.length - 1;
-    qCurrent.textContent = currentIndex + 1;
-    progressFill.style.width = ((currentIndex + 1) / questions.length * 100) + '%';
-
-    questionBody.innerHTML = `
-      <div class="question-card">
-        <div class="q-text-col">
-          <div class="q-number">Question ${currentIndex + 1}</div>
-          <div class="q-text">${renderText(q.questiontext)}</div>
-        </div>
-        ${q.questionimage ? `<div class="q-image-col"><img class="q-image zoomable" src="${q.questionimage}" alt="" onerror="this.parentElement.style.display='none'"></div>` : ''}
-      </div>
-
-      <div class="answer-row hidden" id="answer-row">
-        <div class="a-label">Answer</div>
-        <div class="a-text">${renderText(q.answer)}</div>
-        ${q.answerimage ? `<img class="a-image zoomable" src="${q.answerimage}" alt="" onerror="this.style.display='none'">` : ''}
-      </div>
-
-      <div class="controls-row">
-        <button class="btn btn-prev" id="prev-btn" ${currentIndex === 0 ? 'disabled style="opacity:0.3;cursor:default"' : ''}>← Prev</button>
-        <button class="btn btn-reveal" id="reveal-btn">Reveal Answer</button>
-        <button class="btn btn-next" id="next-btn">${isLast ? 'Finish ♛' : 'Next →'}</button>
-      </div>
-    `;
-
-    document.getElementById('prev-btn').addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); } });
-    document.getElementById('reveal-btn').addEventListener('click', toggleAnswer);
-    document.getElementById('next-btn').addEventListener('click', nextQuestion);
-  }
-
-  function toggleAnswer() {
-    answerVisible = !answerVisible;
-    document.getElementById('answer-row').classList.toggle('hidden', !answerVisible);
-    document.getElementById('reveal-btn').textContent = answerVisible ? 'Hide Answer' : 'Reveal Answer';
-  }
-
-  function nextQuestion() {
-    if (currentIndex < questions.length - 1) {
-      currentIndex++;
-      renderQuestion();
+      current += ch; i++;
     } else {
-      showEnd();
+      if (ch === '"') { inQuotes = true; i++; continue; }
+      if (ch === ',') { row.push(current); current = ''; i++; continue; }
+      if (ch === '\n') { row.push(current); rows.push(row); row = []; current = ''; i++; continue; }
+      current += ch; i++;
     }
   }
+  row.push(current);
+  if (row.some(c => c.trim())) rows.push(row);
+  return rows;
+}
 
-  function showEnd() {
-    questionBody.innerHTML = `
-      <div class="end-screen">
-        <div class="crown-icon">♛</div>
-        <h2>Quiz Complete</h2>
-        <p>${questions.length} questions · scores above</p>
-        <button class="btn btn-reveal" id="restart-btn">Start Again</button>
+function buildTeamCards() {
+  teams.forEach((team, i) => {
+    const card = document.getElementById(`team-${i}`);
+    card.innerHTML = `
+      <input class="team-name-input" type="text" value="${team.name.replace(/"/g,'&quot;')}" placeholder="Team ${i+1}" data-i="${i}">
+      <div class="team-score-row">
+        <div class="score-btns">
+          <button class="score-btn minus" data-i="${i}" data-d="-5" title="-5">&minus;</button>
+          <button class="score-btn plus"  data-i="${i}" data-d="5"  title="+5">+</button>
+        </div>
+        <div class="score-display" id="score-${i}">${team.score}</div>
       </div>
+      <div class="score-label">&plusmn; 5 per click</div>
     `;
-    document.getElementById('restart-btn').addEventListener('click', () => { showReady(); });
-  }
+  });
+  document.querySelectorAll('.team-name-input').forEach(inp => {
+    inp.addEventListener('input', e => { teams[+e.target.dataset.i].name = e.target.value; });
+  });
+  document.querySelectorAll('.score-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const i = +btn.dataset.i; const d = +btn.dataset.d;
+      teams[i].score = Math.max(0, teams[i].score + d);
+      document.getElementById(`score-${i}`).textContent = teams[i].score;
+    });
+  });
+}
 
-  // Safely render text: escape HTML first, then allow <br>, **bold**, *italic*
-  function renderText(str) {
-    if (!str) return '';
-    let s = str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
-    s = s.replace(/\n/g, '<br>');
-    s = s.replace(/&lt;br&gt;/gi, '<br>');
-    s = s.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    s = s.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    return s;
+function startQuiz() {
+  document.querySelectorAll('.setup-team-input').forEach(inp => {
+    const i = +inp.dataset.i;
+    if (inp.value.trim()) teams[i].name = inp.value.trim();
+  });
+  if (currentQuiz) {
+    document.getElementById('sidebar-icon-label').textContent = currentQuiz.sidebarLabel;
   }
+  uploadScreen.style.display = 'none';
+  quizScreen.style.display = 'flex';
+  buildTeamCards();
+  qTotal.textContent = questions.length;
+  showReady();
+}
+
+function showReady() {
+  answerVisible = false;
+  progressFill.style.width = '0%';
+  qCurrent.textContent = '—';
+  const icon = currentQuiz ? currentQuiz.readyIcon : '♛';
+  const title = currentQuiz ? currentQuiz.readyTitle : 'Ready?';
+  questionBody.innerHTML = `
+    <div class="end-screen">
+      <div class="hero-icon">${icon}</div>
+      <h2>${title}</h2>
+      <p>${questions.length} questions loaded</p>
+      <button class="btn btn-reveal" id="start-btn">Start Quiz</button>
+    </div>
+  `;
+  document.getElementById('start-btn').addEventListener('click', () => { currentIndex = 0; renderQuestion(); });
+}
+
+function renderQuestion() {
+  answerVisible = false;
+  const q = questions[currentIndex];
+  const isLast = currentIndex === questions.length - 1;
+  const finishLabel = currentQuiz ? currentQuiz.finishLabel : 'Finish';
+  qCurrent.textContent = currentIndex + 1;
+  progressFill.style.width = ((currentIndex + 1) / questions.length * 100) + '%';
+
+  questionBody.innerHTML = `
+    <div class="question-card">
+      <div class="q-text-col">
+        <div class="q-number">Question ${currentIndex + 1}</div>
+        <div class="q-text">${renderText(q.questiontext)}</div>
+      </div>
+      ${q.questionimage ? `<div class="q-image-col"><img class="q-image zoomable" src="${q.questionimage}" alt="" onerror="this.parentElement.style.display='none'"></div>` : ''}
+    </div>
+    <div class="answer-row hidden" id="answer-row">
+      <div class="a-label">Answer</div>
+      <div class="a-text">${renderText(q.answer)}</div>
+      ${q.answerimage ? `<img class="a-image zoomable" src="${q.answerimage}" alt="" onerror="this.style.display='none'">` : ''}
+    </div>
+    <div class="controls-row">
+      <button class="btn btn-prev" id="prev-btn" ${currentIndex === 0 ? 'disabled style="opacity:0.3;cursor:default"' : ''}>← Prev</button>
+      <button class="btn btn-reveal" id="reveal-btn">Reveal Answer</button>
+      <button class="btn btn-next" id="next-btn">${isLast ? finishLabel : 'Next →'}</button>
+    </div>
+  `;
+
+  document.getElementById('prev-btn').addEventListener('click', () => { if (currentIndex > 0) { currentIndex--; renderQuestion(); } });
+  document.getElementById('reveal-btn').addEventListener('click', toggleAnswer);
+  document.getElementById('next-btn').addEventListener('click', nextQuestion);
+}
+
+function toggleAnswer() {
+  answerVisible = !answerVisible;
+  document.getElementById('answer-row').classList.toggle('hidden', !answerVisible);
+  document.getElementById('reveal-btn').textContent = answerVisible ? 'Hide Answer' : 'Reveal Answer';
+}
+
+function nextQuestion() {
+  if (currentIndex < questions.length - 1) { currentIndex++; renderQuestion(); }
+  else { showEnd(); }
+}
+
+function showEnd() {
+  const icon = currentQuiz ? currentQuiz.readyIcon : '♛';
+  questionBody.innerHTML = `
+    <div class="end-screen">
+      <div class="hero-icon">${icon}</div>
+      <h2>Quiz Complete</h2>
+      <p>${questions.length} questions · scores above</p>
+      <button class="btn btn-reveal" id="restart-btn">Start Again</button>
+    </div>
+  `;
+  document.getElementById('restart-btn').addEventListener('click', () => { showReady(); });
+}
+
+function renderText(str) {
+  if (!str) return '';
+  let s = str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  s = s.replace(/\n/g,'<br>');
+  s = s.replace(/&lt;br&gt;/gi,'<br>');
+  s = s.replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>');
+  s = s.replace(/\*(.+?)\*/g,'<em>$1</em>');
+  return s;
+}
 </script>
 </body>
 </html>
