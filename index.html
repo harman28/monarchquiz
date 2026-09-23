@@ -585,7 +585,7 @@ function buildTeamCards() {
   document.querySelectorAll('.score-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       const i = +btn.dataset.i; const d = +btn.dataset.d;
-      teams[i].score = Math.max(0, teams[i].score + d);
+      teams[i].score += d;
       document.getElementById(`score-${i}`).textContent = teams[i].score;
     });
   });
