@@ -321,6 +321,14 @@
 
   <div class="preset-section">
     <div class="preset-label">Select a quiz</div>
+    <button class="preset-btn" id="preset-btn-inburgering">
+      <div class="pc1"></div><div class="pc2"></div>
+      <div class="preset-btn-icon">🧡</div>
+      <div class="preset-btn-text">
+        <span class="preset-btn-title">Jasmann's Inburgering Quiz</span>
+        <span class="preset-btn-meta">8 questions · naturalization &amp; graduation edition</span>
+      </div>
+    </button>
     <button class="preset-btn" id="preset-btn-dark">
       <div class="pc1"></div><div class="pc2"></div>
       <div class="preset-btn-icon">♛</div>
@@ -359,14 +367,6 @@
       <div class="preset-btn-text">
         <span class="preset-btn-title">Let There Be Lightsabers</span>
         <span class="preset-btn-meta">36 questions · a 3·4·3 smash quiz</span>
-      </div>
-    </button>
-    <button class="preset-btn" id="preset-btn-inburgering">
-      <div class="pc1"></div><div class="pc2"></div>
-      <div class="preset-btn-icon">🧡</div>
-      <div class="preset-btn-text">
-        <span class="preset-btn-title">Jasmann's Inburgering Quiz</span>
-        <span class="preset-btn-meta">8 questions · naturalization &amp; graduation edition</span>
       </div>
     </button>
   </div>
@@ -505,7 +505,7 @@ document.addEventListener('keydown', e => {
   if (e.key === 'Escape') { lightbox.classList.remove('active'); return; }
   if (lightbox.classList.contains('active')) return;
   if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-  if (e.key === ' ') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
+  if (e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
   if (e.key === 'ArrowRight') { const btn = document.getElementById('next-btn'); if (btn) btn.click(); }
   if (e.key === 'ArrowLeft') { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
 });
