@@ -322,6 +322,14 @@
 
   <div class="preset-section">
     <div class="preset-label">Select a quiz</div>
+    <button class="preset-btn" id="preset-btn-diwali">
+      <div class="pc1"></div><div class="pc2"></div>
+      <div class="preset-btn-icon">🪔</div>
+      <div class="preset-btn-text">
+        <span class="preset-btn-title">Diwali Quiz</span>
+        <span class="preset-btn-meta">0 questions · work in progress</span>
+      </div>
+    </button>
     <button class="preset-btn" id="preset-btn-inburgering">
       <div class="pc1"></div><div class="pc2"></div>
       <div class="preset-btn-icon">🧡</div>
@@ -413,6 +421,16 @@
 
 <script>
 const QUIZZES = {
+  diwali: {
+    theme: 'dark',
+    icon: '🪔',
+    subtitle: 'Diwali Quiz',
+    readyIcon: '🪔',
+    readyTitle: 'Ready?',
+    finishLabel: 'Finish 🪔',
+    sidebarLabel: '🪔 Scoreboard',
+    csv: "questiontext,answer,questionimage,answerimage"
+  },
   dark: {
     theme: 'dark',
     icon: '♛',
@@ -558,6 +576,10 @@ document.getElementById('preset-btn-lightsabers').addEventListener('click', () =
 document.getElementById('preset-btn-inburgering').addEventListener('click', () => {
   setTheme(QUIZZES.inburgering.theme);
   parseCSV(QUIZZES.inburgering.csv, QUIZZES.inburgering);
+});
+document.getElementById('preset-btn-diwali').addEventListener('click', () => {
+  setTheme(QUIZZES.diwali.theme);
+  parseCSV(QUIZZES.diwali.csv, QUIZZES.diwali);
 });
 
 browseBtn.addEventListener('click', () => fileInput.click());
