@@ -522,10 +522,29 @@ lightbox.addEventListener('click', () => lightbox.classList.remove('active'));
 
 // ── Keyboard shortcuts ──
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') { lightbox.classList.remove('active'); return; }
-  if (lightbox.classList.contains('active')) return;
   if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
-  if (e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
+  if (e.key === 'Escape') { lightbox.classList.remove('active'); return; }
+
+  if (lightbox.classList.contains('active')) {
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { e.preventDefault(); lightbox.classList.remove('active'); }
+    return;
+  }
+
+  if (e.key === ' ') { e.preventDefault(); const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
+  if (e.key === 'ArrowUp') {
+    e.preventDefault();
+    const qImg = document.querySelector('.q-image-col .q-image.zoomable');
+    if (qImg) { lightboxImg.src = qImg.src; lightbox.classList.add('active'); }
+  }
+  if (e.key === 'ArrowDown') {
+    e.preventDefault();
+    if (!answerVisible) {
+      const btn = document.getElementById('reveal-btn'); if (btn) btn.click();
+    } else {
+      const aImg = document.querySelector('.answer-row .a-image.zoomable');
+      if (aImg) { lightboxImg.src = aImg.src; lightbox.classList.add('active'); }
+    }
+  }
   if (e.key === 'ArrowRight') { const btn = document.getElementById('next-btn'); if (btn) btn.click(); }
   if (e.key === 'ArrowLeft') { if (currentIndex > 0) { currentIndex--; renderQuestion(); } }
 });
