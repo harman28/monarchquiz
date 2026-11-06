@@ -192,6 +192,7 @@
   .q-text { font-family:'Cormorant Garamond',serif; font-size:clamp(1rem,1.8vw,1.3rem); line-height:1.75; color:var(--text); }
   .q-image-col { flex-shrink:0; width:260px; display:flex; align-items:center; justify-content:center; overflow:hidden; }
   .q-image { max-width:100%; max-height:100%; object-fit:contain; border:1px solid var(--border); }
+  .q-video { max-width:100%; max-height:100%; object-fit:contain; border:1px solid var(--border); }
 
   @media (max-width:600px) {
     .main-panel { padding-bottom:20px; }
@@ -389,7 +390,7 @@
     <div class="error-msg" id="error-msg"></div>
     <input type="file" id="file-input" accept=".csv">
   </div>
-  <div class="format-hint">columns: questiontext · answer · questionimage · answerimage</div>
+  <div class="format-hint">columns: questiontext · answer · questionimage · answerimage · questionvideo</div>
 </div>
 
 <div id="quiz-screen">
@@ -429,7 +430,7 @@ const QUIZZES = {
     readyTitle: 'Ready?',
     finishLabel: 'Finish 🪔',
     sidebarLabel: '🪔 Scoreboard',
-    csv: "questiontext,answer,questionimage,answerimage"
+    csv: "questiontext,answer,questionimage,answerimage,questionvideo"
   },
   dark: {
     theme: 'dark',
@@ -623,6 +624,7 @@ function parseCSV(text, quizMeta) {
     answer:        (cols[1]||'').trim(),
     questionimage: (cols[2]||'').trim(),
     answerimage:   (cols[3]||'').trim(),
+    questionvideo: (cols[4]||'').trim(),
   })).filter(q => q.questiontext);
   if (!parsed.length) { errorMsg.textContent = 'No valid questions found.'; return; }
   questions = parsed;
@@ -726,7 +728,7 @@ function renderQuestion() {
         <div class="q-number">Question ${currentIndex + 1}</div>
         <div class="q-text">${renderText(q.questiontext)}</div>
       </div>
-      ${q.questionimage ? `<div class="q-image-col"><img class="q-image zoomable" src="${q.questionimage}" alt="" onerror="this.parentElement.style.display='none'"></div>` : ''}
+      ${q.questionvideo ? `<div class="q-image-col"><video class="q-video" src="${q.questionvideo}" controls playsinline></video></div>` : q.questionimage ? `<div class="q-image-col"><img class="q-image zoomable" src="${q.questionimage}" alt="" onerror="this.parentElement.style.display='none'"></div>` : ''}
     </div>
     <div class="answer-row hidden" id="answer-row">
       <div class="a-label">Answer</div>
