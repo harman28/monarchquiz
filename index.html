@@ -543,6 +543,7 @@ document.addEventListener('keydown', e => {
     } else {
       const aImg = document.querySelector('.answer-row .a-image.zoomable');
       if (aImg) { lightboxImg.src = aImg.src; lightbox.classList.add('active'); }
+      else { const btn = document.getElementById('reveal-btn'); if (btn) btn.click(); }
     }
   }
   if (e.key === 'ArrowRight') { const btn = document.getElementById('next-btn'); if (btn) btn.click(); }
